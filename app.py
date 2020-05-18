@@ -17,6 +17,7 @@ from botbuilder.schema import Activity, ActivityTypes
 
 from bots import EchoBot
 from config import DefaultConfig
+from test_luis_recognizer import TestLuisRecognizer
 
 CONFIG = DefaultConfig()
 
@@ -25,6 +26,9 @@ CONFIG = DefaultConfig()
 SETTINGS = BotFrameworkAdapterSettings(CONFIG.APP_ID, CONFIG.APP_PASSWORD)
 ADAPTER = BotFrameworkAdapter(SETTINGS)
 
+# Create dialogs and Bot
+RECOGNIZER = TestLuisRecognizer(CONFIG)
+BOT = EchoBot(RECOGNIZER)
 
 # Catch-all for errors.
 async def on_error(context: TurnContext, error: Exception):
@@ -56,8 +60,7 @@ async def on_error(context: TurnContext, error: Exception):
 
 ADAPTER.on_turn_error = on_error
 
-# Create the Bot
-BOT = EchoBot()
+
 
 
 # Listen for incoming requests on /api/messages
