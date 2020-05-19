@@ -29,11 +29,6 @@ class EchoBot(ActivityHandler):
             MessageFactory.text(f"Echo: {turn_context.activity.text}")
         )
 
-        regname = self._luis_recognizer.__class__.__name__
-        await turn_context.send_activity(
-            MessageFactory.text(f"Echo: {regname}")
-        )
-
         if not self._luis_recognizer.is_configured:
             await turn_context.send_activity(
                 MessageFactory.text(f"Echo: Luis not configured!")
