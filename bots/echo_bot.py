@@ -3,8 +3,7 @@
 
 from botbuilder.core import ActivityHandler, MessageFactory, TurnContext, ConversationState, UserState
 from botbuilder.schema import ChannelAccount
-
-import connector
+from connector import confluence_search
 from data_models import SearchInfo, Question, Conversation
 
 
@@ -76,7 +75,7 @@ class EchoBot(ActivityHandler):
 
         elif flow.last_question_asked == Question.ROLLE:
 
-            info.rolle = connector.confluence_calls.get_Role(user_input)
+            info.rolle = confluence_search.get_rolle(user_input)
 
             await turn_context.send_activity(
                 MessageFactory.text(f"You will search for the Role {info.rolle}.")
