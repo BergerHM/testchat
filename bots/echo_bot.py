@@ -75,7 +75,7 @@ class EchoBot(ActivityHandler):
 
         elif flow.last_question_asked == Question.ROLLE:
 
-            info.rolle = confluence_search.get_rolle(user_input)
+            info.rolle = user_input
 
             await turn_context.send_activity(
                 MessageFactory.text(f"You will search for the Role {info.rolle}.")
@@ -83,4 +83,12 @@ class EchoBot(ActivityHandler):
             await turn_context.send_activity(
                 MessageFactory.text("I wait for information from Confluence")
             )
+            search = confluence_search()
+            information = search.get_rolle(f"{info.rolle}")
+            print(information)
+            for x in information:
+                await turn_context.send_activity(
+                    MessageFactory.text(f"{x}")
+                )
+
             flow.last_question_asked = Question.NONE
