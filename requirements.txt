@@ -1,2 +1,2 @@
-botbuilder-integration-aiohttp>=4.8.0
 beautifulsoup4
+botbuilder.core
