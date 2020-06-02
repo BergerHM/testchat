@@ -1,11 +1,6 @@
 # Methods for searching Confluence
-import json
-from turtle import pd
 from html.parser import HTMLParser
-
 import requests
-from bs4 import BeautifulSoup
-from lxml import etree
 
 
 class confluence_search:
@@ -114,5 +109,3 @@ class HTMLTableParser(HTMLParser):
         elif tag == 'table':
             self.tables.append(self._current_table)
             self._current_table = []
-
-
