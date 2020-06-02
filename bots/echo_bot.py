@@ -3,7 +3,7 @@
 
 from botbuilder.core import ActivityHandler, MessageFactory, TurnContext, ConversationState, UserState
 from botbuilder.schema import ChannelAccount
-from connector import confluence_search
+from connector import ConfluenceSearch
 from data_models import SearchInfo, Question, Conversation
 
 
@@ -83,7 +83,7 @@ class EchoBot(ActivityHandler):
             await turn_context.send_activity(
                 MessageFactory.text("I wait for information from Confluence")
             )
-            search = confluence_search()
+            search = ConfluenceSearch()
             information = search.get_rolle(f"{info.rolle}")
             print(information)
             for x in information:

@@ -3,7 +3,7 @@ from html.parser import HTMLParser
 import requests
 
 
-class confluence_search:
+class ConfluenceSearch:
     payload = {}
     headers = {
         'Authorization': 'Basic bHVrYXMuYWx0ZW5zdHJhc3NlckBobS5lZHU6YjBWbGpSc3pxRUFQWE1qQnlmMEdCMEQ4'
