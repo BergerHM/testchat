@@ -5,6 +5,7 @@ import sys
 import traceback
 from datetime import datetime
 
+from botbuilder.ai import LuisRecognizer
 from aiohttp import web
 from aiohttp.web import Request, Response, json_response
 from botbuilder.core import (
@@ -12,6 +13,7 @@ from botbuilder.core import (
     TurnContext,
     BotFrameworkAdapter, UserState, ConversationState, MemoryStorage,
 )
+from botbuilder.ai import LuisRecognizer
 from botbuilder.core.integration import aiohttp_error_middleware
 from botbuilder.schema import Activity, ActivityTypes
 
