@@ -39,7 +39,7 @@ class ConfluenceSearch:
         parser.feed(html)
 
         # TODO: dynmaisches durchlaufen
-        for i in range(0, 7):
+        for i in range(1, 8):
             if (parser.tables[0][i][0] == role):
                 for j in range(0, 3):
                     array.append(parser.tables[0][i][j])
