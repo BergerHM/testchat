@@ -5,20 +5,20 @@ import sys
 import traceback
 from datetime import datetime
 
-from botbuilder.ai import LuisRecognizer
 from aiohttp import web
 from aiohttp.web import Request, Response, json_response
+from botbuilder.ai.luis import LuisRecognizer
 from botbuilder.core import (
     BotFrameworkAdapterSettings,
     TurnContext,
     BotFrameworkAdapter, UserState, ConversationState, MemoryStorage,
 )
-from botbuilder.ai import LuisRecognizer
 from botbuilder.core.integration import aiohttp_error_middleware
 from botbuilder.schema import Activity, ActivityTypes
 
 from bots import EchoBot
 from config import DefaultConfig
+from recognizer.luis_recognizer_enigma import LuisRecognizerEnigma
 
 CONFIG = DefaultConfig()
 
@@ -61,7 +61,8 @@ MEMORY = MemoryStorage()
 USER_STATE = UserState(MEMORY)
 CONVERSATION_STATE = ConversationState(MEMORY)
 # Create the Bot
-BOT = EchoBot(CONVERSATION_STATE, USER_STATE)
+RECOGNIZER = LuisRecognizerEnigma(CONFIG)
+BOT = EchoBot(CONVERSATION_STATE, USER_STATE, RECOGNIZER)
 
 
 # Listen for incoming requests on /api/messages

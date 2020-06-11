@@ -5,10 +5,11 @@ from botbuilder.core import ActivityHandler, MessageFactory, TurnContext, Conver
 from botbuilder.schema import ChannelAccount
 from connector import confluence_search
 from data_models import SearchInfo, Question, Conversation
+from recognizer import luis_recognizer_enigma
 
 
 class EchoBot(ActivityHandler):
-    def __init__(self, conversation_state: ConversationState, user_state: UserState):
+    def __init__(self, conversation_state: ConversationState, user_state: UserState, luis_recognizer2: luis_recognizer_enigma.LuisRecognizerEnigma):
         if conversation_state is None:
             raise TypeError(
                 "[CustomPromptBot]: Missing parameter. conversation_state is required but None was given"
@@ -17,6 +18,7 @@ class EchoBot(ActivityHandler):
             raise TypeError(
                 "[CustomPromptBot]: Missing parameter. user_state is required but None was given"
             )
+        self._luis_recognizer = luis_recognizer2
 
         self.conversation_state = conversation_state
         self.user_state = user_state
@@ -74,6 +76,19 @@ class EchoBot(ActivityHandler):
 
 
         elif flow.last_question_asked == Question.ROLLE:
+
+            # answer_from_luis = methode für luis(user_input)
+            # recognizer_result ist was luis zurück gibt
+            recognizer_result = await self._luis_recognizer.recognize(turn_context)
+
+            #Hier muss dann noch eine schleife kommen, die hab ich rigendwo schonmal gesehen
+            # Testweise mit diesen Variablen arbeiten, wobei anzumerken ist entitie kann auch merzahl sein
+            intent = "suche"
+            entitie = "coach"
+
+            await turn_context.send_activity(
+                MessageFactory.text(f"Luis had this to say: {recognizer_result}")
+            )
 
             info.rolle = confluence_search.get_rolle(user_input)
 
