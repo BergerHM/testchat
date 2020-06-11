@@ -7,7 +7,7 @@ from connector import ConfluenceSearch
 from data_models import SearchInfo, Question, Conversation
 
 
-class EchoBot(ActivityHandler):
+class Enigma_ConBot(ActivityHandler):
     def __init__(self, conversation_state: ConversationState, user_state: UserState):
         if conversation_state is None:
             raise TypeError(
