@@ -15,7 +15,7 @@ from botbuilder.core import (
 from botbuilder.core.integration import aiohttp_error_middleware
 from botbuilder.schema import Activity, ActivityTypes
 
-from bots import EchoBot
+from bots import Enigma_ConBot
 from config import DefaultConfig
 
 CONFIG = DefaultConfig()
@@ -59,7 +59,7 @@ MEMORY = MemoryStorage()
 USER_STATE = UserState(MEMORY)
 CONVERSATION_STATE = ConversationState(MEMORY)
 # Create the Bot
-BOT = EchoBot(CONVERSATION_STATE, USER_STATE)
+BOT = Enigma_ConBot(CONVERSATION_STATE, USER_STATE)
 
 
 # Listen for incoming requests on /api/messages
