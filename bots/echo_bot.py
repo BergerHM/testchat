@@ -1,7 +1,7 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # Licensed under the MIT License.
 
-from botbuilder.core import ActivityHandler, MessageFactory, TurnContext, ConversationState, UserState
+from botbuilder.core import ActivityHandler, MessageFactory, TurnContext, ConversationState, UserState, MemoryStorage
 from botbuilder.schema import ChannelAccount
 from connector import ConfluenceSearch
 from data_models import SearchInfo, Question, Conversation
@@ -29,7 +29,7 @@ class EchoBot(ActivityHandler):
     ):
         for member in members_added:
             if member.id != turn_context.activity.recipient.id:
-                await turn_context.send_activity("Welcome to search in Confluence!")
+                await turn_context.send_activity("Hi! Welcome my Name is Enigma. Please tell me what you search for?")
 
     async def on_message_activity(self, turn_context: TurnContext):
 
@@ -46,49 +46,79 @@ class EchoBot(ActivityHandler):
     async def _fill_out_information(
             self, flow: Conversation, info: SearchInfo, turn_context: TurnContext
     ):
+
         user_input = turn_context.activity.text.strip()
+
+        # Hier muss der erste eingegebene Text an Luis gesendet werden
+        # MIt der Antwort von Luis müssen die Variablen Story und search_info befüllt werden
+
+        story = "titel"
+        search_info = ""
 
         # ask for name
         if flow.last_question_asked == Question.NONE:
-            if user_input == "Hi":
+            if story == "titel" and search_info == "":
                 await turn_context.send_activity(
-                    MessageFactory.text("Hi.")
+                    MessageFactory.text("What Expert do you want to search?")
                 )
-            await turn_context.send_activity(
-                MessageFactory.text("Let's get started. But first, what is your name?")
-            )
-            flow.last_question_asked = Question.NAME
+            flow.last_question_asked = Question.EXPERT
 
+        elif flow.last_question_asked == Question.EXPERT:
 
-        elif flow.last_question_asked == Question.NAME:
-
-            info.name = user_input
-
-            await turn_context.send_activity(
-                MessageFactory.text(f"Hello {info.name}")
-            )
-            await turn_context.send_activity(
-                MessageFactory.text("Which Role do you want to search?")
-            )
-            flow.last_question_asked = Question.ROLLE
-
-
-        elif flow.last_question_asked == Question.ROLLE:
-
-            info.rolle = user_input
-
-            await turn_context.send_activity(
-                MessageFactory.text(f"You will search for the Role {info.rolle}.")
-            )
-            await turn_context.send_activity(
-                MessageFactory.text("I wait for information from Confluence")
-            )
-            search = ConfluenceSearch()
-            information = search.get_rolle(f"{info.rolle}")
+            information = ConfluenceSearch().get_rolles()
             print(information)
-            for x in information:
+            info.rolle = user_input
+            # TODO: user_input muss an LUIS gesendet werden
+            # TODO:Luis muss die Variable search_info füllen
+
+            # die information muss alle vorhandenen Rollen enthalten
+
+            if info.rolle in information:
                 await turn_context.send_activity(
-                    MessageFactory.text(f"{x}")
+                    MessageFactory.text(f"So you search for this Experts '{info.rolle}' information?")
+                )
+                flow.last_question_asked = Question.ACCEPT
+            else:
+                # Alle vorhandenen Rollen ausgeben
+                await turn_context.send_activity(
+                    MessageFactory.text("Specify your search please. I find this experts roles: ")
+                )
+                for x in information:
+                    await turn_context.send_activity(
+                        MessageFactory.text(f"{x}")
+                    )
+                flow.last_question_asked = Question.EXPERT
+
+        elif flow.last_question_asked == Question.ACCEPT:
+
+            if user_input == "Yes":
+                information = ConfluenceSearch().get_rolle(info.rolle)
+                for x in information:
+                    await turn_context.send_activity(
+                        MessageFactory.text(f"{x}")
+                    )
+                await turn_context.send_activity(
+                    MessageFactory.text(
+                        "Are you happy with this information?")
+                )
+                flow.last_question_asked = Question.HAPPY
+            else:
+                await turn_context.send_activity(
+                    MessageFactory.text(
+                        "Your input equals with nothing in the list. Please try again. What Expert do you want to search?")
+                )
+                flow.last_question_asked = Question.EXPERT
+
+        elif flow.last_question_asked == Question.HAPPY:
+            if user_input == "Yes":
+                await turn_context.send_activity(
+                    MessageFactory.text(
+                        "Perfect. It was nice to meet you. Have a nice day!")
                 )
 
+            else:
+                await turn_context.send_activity(
+                    MessageFactory.text(
+                        "Please don't hesitate to ask again.")
+                )
             flow.last_question_asked = Question.NONE

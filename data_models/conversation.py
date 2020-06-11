@@ -3,9 +3,10 @@ from enum import Enum
 
 
 class Question(Enum):
-    NAME = 1
-    ROLLE = 2
-    NONE = 3
+    EXPERT = 1
+    ACCEPT = 2
+    HAPPY = 3
+    NONE = 4
 
 
 class Conversation:

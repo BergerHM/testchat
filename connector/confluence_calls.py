@@ -38,11 +38,33 @@ class ConfluenceSearch:
         parser = HTMLTableParser()
         parser.feed(html)
 
+        # TODO: dynmaisches durchlaufen
         for i in range(0, 7):
             if (parser.tables[0][i][0] == role):
                 for j in range(0, 3):
                     array.append(parser.tables[0][i][j])
         return array
+
+    def get_rolles(self):
+
+        array = []
+        payload = {}
+        headers = {
+            'Authorization': 'Basic bHVrYXMuYWx0ZW5zdHJhc3NlckBobS5lZHU6YjBWbGpSc3pxRUFQWE1qQnlmMEdCMEQ4'
+        }
+        url = "https://ccwi.atlassian.net/wiki/rest/api/content/47939585?expand=body.storage"
+        response = requests.request("GET", url, headers=headers, data=payload)
+        json_response = response.json()
+        html = json_response['body']['storage']['value']
+        parser = HTMLTableParser()
+        parser.feed(html)
+
+        # TODO: dynmaisches durchlaufen
+        for i in range(1, 8):
+            array.append(parser.tables[0][i][0])
+        return array
+
+
 
 
 class HTMLTableParser(HTMLParser):
