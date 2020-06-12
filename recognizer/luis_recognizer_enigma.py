@@ -25,8 +25,8 @@ class LuisRecognizerEnigma(Recognizer):
         #               "https://" + configuration.LUIS_API_HOST_NAME,
         ##)
         luis_application = LuisApplication(
-            "b57218d9-4609-43a7-bdb1-5aad09e23563",
-            "2e34b03b13104de3a71ded563a9dbd4d",
+            "36901912-db40-4303-8dac-58b3bcc43390",
+            "d108bb0f1d774d519db79d4d6753bb98",
             "https://westus.api.cognitive.microsoft.com",
         )
         self._recognizer = LuisRecognizer(luis_application)
