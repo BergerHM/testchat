@@ -82,13 +82,15 @@ class Enigma_ConBot(ActivityHandler):
                 flow.last_question_asked = Question.ACCEPT
             else:
                 # Alle vorhandenen Rollen ausgeben
-                await turn_context.send_activity(
-                    MessageFactory.text("Specify your search please. I find this experts roles: ")
-                )
+                # await turn_context.send_activity(
+                #     MessageFactory.text("Specify your search please. I find this experts roles:")
+                # )
+                response = "Specify your search please.\n\nI found this roles you can search for:  "
                 for x in information:
-                    await turn_context.send_activity(
-                        MessageFactory.text(f"{x}")
-                    )
+                    response += "\n\n - " + x
+                await turn_context.send_activity(
+                    MessageFactory.text(f"{response}")
+                )
                 flow.last_question_asked = Question.EXPERT
 
         elif flow.last_question_asked == Question.ACCEPT:

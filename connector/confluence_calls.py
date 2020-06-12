@@ -63,6 +63,8 @@ class ConfluenceSearch:
         for i in parser.tables[0]:
             if i[0] != "Rolle":
                 array.append(i[0])
+            # Remove duplicates
+            array = list(dict.fromkeys(array))
         return array
 
 
