@@ -1,8 +1,10 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # Licensed under the MIT License.
-#Test
+# Test
 from botbuilder.core import ActivityHandler, MessageFactory, TurnContext, ConversationState, UserState, MemoryStorage
-from botbuilder.schema import ChannelAccount
+from botbuilder.schema import ChannelAccount, Attachment
+
+from bots.CardBuilder import CardBuilder
 from connector import ConfluenceSearch
 from data_models import SearchInfo, Question, Conversation
 
@@ -20,7 +22,7 @@ class Enigma_ConBot(ActivityHandler):
 
         self.conversation_state = conversation_state
         self.user_state = user_state
-
+        self.cardbuilder = CardBuilder()
         self.flow_accessor = self.conversation_state.create_property("ConversationFlow")
         self.profile_accessor = self.user_state.create_property("UserProfile")
 
@@ -66,7 +68,7 @@ class Enigma_ConBot(ActivityHandler):
         elif flow.last_question_asked == Question.EXPERT:
 
             information = ConfluenceSearch().get_rolles()
-            print(information)
+            # print(information)
             info.rolle = user_input
             # TODO: user_input muss an LUIS gesendet werden
             # TODO:Luis muss die Variable search_info füllen
@@ -93,10 +95,11 @@ class Enigma_ConBot(ActivityHandler):
 
             if user_input == "Yes":
                 information = ConfluenceSearch().get_rolle(info.rolle)
-                for x in information:
-                    await turn_context.send_activity(
-                        MessageFactory.text(f"{x}")
-                    )
+                response = self.cardbuilder.build_adaptive_role_card(information)
+                attachment = Attachment(content_type='application/vnd.microsoft.card.adaptive', content=response)
+                await turn_context.send_activity(
+                    MessageFactory.attachment(attachment)
+                )
                 await turn_context.send_activity(
                     MessageFactory.text(
                         "Are you happy with this information?")

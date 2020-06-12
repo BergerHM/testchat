@@ -1,12 +1,11 @@
 import json
 
+
 class CardBuilder():
-    def build_adaptive_card(self):
+    def build_adaptive_role_card(self, information):
         with open('cards/AdaptiveCardTemplate.json') as json_file:
             data = json.load(json_file)
-            for p in data:
-                print(p)
-        bot = CardBuilder
+        print(information)
         return data
 
     def set_url(self, card, url):
@@ -19,7 +18,3 @@ class CardBuilder():
         """
         # TODO: find url tag and change it
         return card
-
-
-c = CardBuilder()
-c.build_adaptive_card()

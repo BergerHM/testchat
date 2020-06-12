@@ -27,6 +27,7 @@ class ConfluenceSearch:
     def get_rolle(self, role):
 
         array = []
+        data = []
         payload = {}
         headers = {
             'Authorization': 'Basic bHVrYXMuYWx0ZW5zdHJhc3NlckBobS5lZHU6YjBWbGpSc3pxRUFQWE1qQnlmMEdCMEQ4'
@@ -37,13 +38,14 @@ class ConfluenceSearch:
         html = json_response['body']['storage']['value']
         parser = HTMLTableParser()
         parser.feed(html)
-
-        # TODO: dynmaisches durchlaufen
-        for i in range(1, 8):
-            if (parser.tables[0][i][0] == role):
-                for j in range(0, 3):
-                    array.append(parser.tables[0][i][j])
-        return array
+        # print(len(parser.tables[0]))
+        # for i in range(1,8):
+        #     if (parser.tables[0][i][0] == role):
+        #         for j in range(0, 3):
+        #             array.append(parser.tables[0][i][j])
+        for i in parser.tables[0]:
+            data.append(i)
+        return data
 
     def get_rolles(self):
 
@@ -58,13 +60,10 @@ class ConfluenceSearch:
         html = json_response['body']['storage']['value']
         parser = HTMLTableParser()
         parser.feed(html)
-
-        # TODO: dynmaisches durchlaufen
-        for i in range(1, 8):
-            array.append(parser.tables[0][i][0])
+        for i in parser.tables[0]:
+            if i[0] != "Rolle":
+                array.append(i[0])
         return array
-
-
 
 
 class HTMLTableParser(HTMLParser):
