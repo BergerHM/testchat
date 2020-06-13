@@ -5,9 +5,9 @@ class CardBuilder():
     def build_adaptive_role_card(self, information):
         with open('cards/AdaptiveCardTemplate.json') as json_file:
             data = json.load(json_file)
-        print(information)
-        print(data['body'][1]['items'][1])
-        data['body'][1]['items'].append(self.create_column_set())
+        for x in information:
+            data['body'][0]['items'].append(self.create_column_set(x[0], x[1], x[2]))
+        # data['body'][1]['items'].append(self.create_column_set())
         return data
 
     def set_url(self, card, url):
@@ -21,21 +21,38 @@ class CardBuilder():
         # TODO: find url tag and change it
         return card
 
-    def create_column_set(self):
-        columnitem = [{
-            'type': "TextBlock",
-            'text': "HIER TEXT",
-            'wrap': 'true'
-        }]
-        column = {
+    def create_column_set(self, column1, column2, column3):
+        column1 = {
             'type': "Column",
             'width': "stretch",
-            'items': columnitem
+            'items': [{
+                'type': "TextBlock",
+                'text': column1,
+                'wrap': 'true'
+            }]
+        }
+        column2 = {
+            'type': "Column",
+            'width': "stretch",
+            'items': [{
+                'type': "TextBlock",
+                'text': column2,
+                'wrap': 'true'
+            }]
+        }
+        column3 = {
+            'type': "Column",
+            'width': "stretch",
+            'items': [{
+                'type': "TextBlock",
+                'text': column3,
+                'wrap': 'true'
+            }]
         }
         columns = []
-        columns.append(column)
-        columns.append(column)
-        columns.append(column)
+        columns.append(column1)
+        columns.append(column2)
+        columns.append(column3)
         columnset = {
             'type': "ColumnSet",
             'columns': columns

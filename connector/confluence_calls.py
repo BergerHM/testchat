@@ -44,7 +44,8 @@ class ConfluenceSearch:
         #         for j in range(0, 3):
         #             array.append(parser.tables[0][i][j])
         for i in parser.tables[0]:
-            data.append(i)
+            if i[0] == role:
+                data.append(i)
         return data
 
     def get_rolles(self):

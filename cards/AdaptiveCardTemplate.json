@@ -7,16 +7,6 @@
       "type": "Container",
       "items": [
         {
-          "type": "TextBlock",
-          "text": "Ich habe dazu folgende Informationen dazu gefunden",
-          "wrap": true
-        }
-      ]
-    },
-    {
-      "type": "Container",
-      "items": [
-        {
           "type": "ColumnSet",
           "columns": [
             {
@@ -51,44 +41,6 @@
                   "type": "TextBlock",
                   "text": "Information",
                   "weight": "bolder",
-                  "wrap": true
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "ColumnSet",
-          "columns": [
-            {
-              "type": "Column",
-              "width": "stretch",
-              "items": [
-                {
-                  "type": "TextBlock",
-                  "text": "Hier die Rolle",
-                  "wrap": true
-                }
-              ]
-            },
-            {
-              "type": "Column",
-              "width": "stretch",
-              "items": [
-                {
-                  "type": "TextBlock",
-                  "text": "Hier Name",
-                  "wrap": true
-                }
-              ]
-            },
-            {
-              "type": "Column",
-              "width": "stretch",
-              "items": [
-                {
-                  "type": "TextBlock",
-                  "text": "Hier Informationen",
                   "wrap": true
                 }
               ]
