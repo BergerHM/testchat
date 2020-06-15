@@ -1,10 +1,6 @@
 from enum import Enum
-from typing import Dict
 from botbuilder.ai.luis import LuisRecognizer
-from botbuilder.core import IntentScore, TopIntent, TurnContext
-
-
-# from booking_details import BookingDetails
+from botbuilder.core import  TurnContext
 
 
 class Intent(Enum):
