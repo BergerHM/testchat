@@ -58,36 +58,34 @@ class Enigma_ConBot(ActivityHandler):
         # Hier muss der erste eingegebene Text an Luis gesendet werden
         # MIt der Antwort von Luis müssen die Variablen Story und search_info befüllt werden
 
-        # recognizer_result = await self._luis_recognizer.recognize(turn_context)
+        recognizer_result = await self._luis_recognizer.recognize(turn_context)
         story, search_info = await LuisHelper.execute_luis_query(
             self._luis_recognizer, turn_context
         )
 
-        # await turn_context.send_activity(
-        #     MessageFactory.text(f"Intent: {story}")
-        # )
-        # await turn_context.send_activity(
-        #     MessageFactory.text(f"Entity: {search_info}")
-        # )
-        # await turn_context.send_activity(
-        #     MessageFactory.text(f"Luis had this to say: {recognizer_result}")
-        # )
+        await turn_context.send_activity(
+            MessageFactory.text(f"Intent: {story}")
+        )
+        await turn_context.send_activity(
+            MessageFactory.text(f"Entity: {search_info}")
+        )
+        await turn_context.send_activity(
+            MessageFactory.text(f"Luis had this to say: {recognizer_result}")
+        )
 
         if flow.last_question_asked == Question.NONE:
             if story == "experte" and search_info == "":
                 await turn_context.send_activity(
                     MessageFactory.text("What Expert do you want to search?")
                 )
+            if search_info != "":
+                info.rolle = search_info
             flow.last_question_asked = Question.EXPERT
 
         elif flow.last_question_asked == Question.EXPERT:
 
             information = ConfluenceSearch().get_rolles()
             # print(information)
-
-            if search_info != "":
-                search_info = user_input.capitalize()
-                info.rolle = search_info.capitalize()
 
             if info.rolle in information:
                 await turn_context.send_activity(
