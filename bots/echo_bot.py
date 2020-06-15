@@ -5,10 +5,13 @@ from botbuilder.core import ActivityHandler, MessageFactory, TurnContext, Conver
 from botbuilder.schema import ChannelAccount
 from connector import confluence_search
 from data_models import SearchInfo, Question, Conversation
+from helper.luis_helper import LuisHelper
+from recognizer import luis_recognizer_enigma
 
 
 class EchoBot(ActivityHandler):
-    def __init__(self, conversation_state: ConversationState, user_state: UserState):
+    def __init__(self, conversation_state: ConversationState, user_state: UserState,
+                 luis_recognizer2: luis_recognizer_enigma.LuisRecognizerEnigma):
         if conversation_state is None:
             raise TypeError(
                 "[CustomPromptBot]: Missing parameter. conversation_state is required but None was given"
@@ -17,6 +20,7 @@ class EchoBot(ActivityHandler):
             raise TypeError(
                 "[CustomPromptBot]: Missing parameter. user_state is required but None was given"
             )
+        self._luis_recognizer = luis_recognizer2
 
         self.conversation_state = conversation_state
         self.user_state = user_state
@@ -74,6 +78,26 @@ class EchoBot(ActivityHandler):
 
 
         elif flow.last_question_asked == Question.ROLLE:
+
+            # answer_from_luis = methode für luis(user_input)
+            # recognizer_result ist was luis zurück gibt
+            recognizer_result = await self._luis_recognizer.recognize(turn_context)
+
+            # Call LUIS and gather any potential booking details. (Note the TurnContext has the response to the prompt.)
+            intent, entity = await LuisHelper.execute_luis_query(
+                self._luis_recognizer, turn_context
+            )
+
+            await turn_context.send_activity(
+                MessageFactory.text(f"Intent: {intent}")
+            )
+            await turn_context.send_activity(
+                MessageFactory.text(f"Entity: {entity}")
+            )
+
+            await turn_context.send_activity(
+                MessageFactory.text(f"Luis had this to say: {recognizer_result}")
+            )
 
             info.rolle = confluence_search.get_rolle(user_input)
 
