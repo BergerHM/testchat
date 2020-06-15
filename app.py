@@ -62,7 +62,7 @@ USER_STATE = UserState(MEMORY)
 CONVERSATION_STATE = ConversationState(MEMORY)
 # Create the Bot
 RECOGNIZER = LuisRecognizerEnigma(CONFIG)
-BOT = Enigma_ConBot(CONVERSATION_STATE, USER_STATE)
+BOT = Enigma_ConBot(CONVERSATION_STATE, USER_STATE, RECOGNIZER)
 
 
 # Listen for incoming requests on /api/messages

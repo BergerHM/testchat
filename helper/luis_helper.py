@@ -1,6 +1,6 @@
 from enum import Enum
 from botbuilder.ai.luis import LuisRecognizer
-from botbuilder.core import  TurnContext
+from botbuilder.core import TurnContext
 
 
 class Intent(Enum):
@@ -37,6 +37,9 @@ class LuisHelper:
 
         entity = recognizer_result.entities.get("$instance", {}).get(
             "expert", []
-        )[0]["text"].capitalize()
+        )
+
+        if len(entity) > 0:
+            entity = entity[0]["text"].capitalize()
 
         return intent, entity

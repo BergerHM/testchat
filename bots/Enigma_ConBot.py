@@ -3,14 +3,17 @@
 # Test
 from botbuilder.core import ActivityHandler, MessageFactory, TurnContext, ConversationState, UserState, MemoryStorage
 from botbuilder.schema import ChannelAccount, Attachment
-
+from helper.luis_helper import LuisHelper
+from recognizer import luis_recognizer_enigma
 from bots.CardBuilder import CardBuilder
 from connector import ConfluenceSearch
 from data_models import SearchInfo, Question, Conversation
 
 
 class Enigma_ConBot(ActivityHandler):
-    def __init__(self, conversation_state: ConversationState, user_state: UserState):
+    def __init__(self, conversation_state: ConversationState, user_state: UserState,
+                 luis_recognizer2: luis_recognizer_enigma.LuisRecognizerEnigma):
+
         if conversation_state is None:
             raise TypeError(
                 "[CustomPromptBot]: Missing parameter. conversation_state is required but None was given"
@@ -20,6 +23,7 @@ class Enigma_ConBot(ActivityHandler):
                 "[CustomPromptBot]: Missing parameter. user_state is required but None was given"
             )
 
+        self._luis_recognizer = luis_recognizer2
         self.conversation_state = conversation_state
         self.user_state = user_state
         self.cardbuilder = CardBuilder()
@@ -54,12 +58,23 @@ class Enigma_ConBot(ActivityHandler):
         # Hier muss der erste eingegebene Text an Luis gesendet werden
         # MIt der Antwort von Luis müssen die Variablen Story und search_info befüllt werden
 
-        story = "titel"
-        search_info = ""
+        # recognizer_result = await self._luis_recognizer.recognize(turn_context)
+        story, search_info = await LuisHelper.execute_luis_query(
+            self._luis_recognizer, turn_context
+        )
 
-        # ask for name
+        # await turn_context.send_activity(
+        #     MessageFactory.text(f"Intent: {story}")
+        # )
+        # await turn_context.send_activity(
+        #     MessageFactory.text(f"Entity: {search_info}")
+        # )
+        # await turn_context.send_activity(
+        #     MessageFactory.text(f"Luis had this to say: {recognizer_result}")
+        # )
+
         if flow.last_question_asked == Question.NONE:
-            if story == "titel" and search_info == "":
+            if story == "experte" and search_info == "":
                 await turn_context.send_activity(
                     MessageFactory.text("What Expert do you want to search?")
                 )
@@ -69,11 +84,10 @@ class Enigma_ConBot(ActivityHandler):
 
             information = ConfluenceSearch().get_rolles()
             # print(information)
-            info.rolle = user_input
-            # TODO: user_input muss an LUIS gesendet werden
-            # TODO:Luis muss die Variable search_info füllen
 
-            # die information muss alle vorhandenen Rollen enthalten
+            if search_info != "":
+                search_info = user_input.capitalize()
+                info.rolle = search_info.capitalize()
 
             if info.rolle in information:
                 await turn_context.send_activity(
