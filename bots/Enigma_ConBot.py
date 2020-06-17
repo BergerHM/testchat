@@ -107,7 +107,11 @@ class Enigma_ConBot(ActivityHandler):
 
         elif flow.last_question_asked == Question.ACCEPT:
 
-            if user_input == "Yes":
+            story, search_info = await LuisHelper.execute_luis_query(
+                self._luis_recognizer, turn_context
+            )
+
+            if story == "bestaetigung":
                 information = ConfluenceSearch().get_rolle(info.rolle)
                 response = self.cardbuilder.build_adaptive_role_card(information)
                 attachment = Attachment(content_type='application/vnd.microsoft.card.adaptive', content=response)
@@ -127,7 +131,7 @@ class Enigma_ConBot(ActivityHandler):
                 flow.last_question_asked = Question.EXPERT
 
         elif flow.last_question_asked == Question.HAPPY:
-            if user_input == "Yes":
+            if story == "bestaetigung":
                 await turn_context.send_activity(
                     MessageFactory.text(
                         "Perfect. It was nice to meet you. Have a nice day!")
