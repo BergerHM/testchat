@@ -109,8 +109,7 @@ class Enigma_ConBot(ActivityHandler):
                 flow.last_question_asked = Question.HAPPY
             else:
                 await turn_context.send_activity(
-                    MessageFactory.text(
-                        "Your input equals with nothing in the list. Please try again. What Expert do you want to search?")
+                    MessageFactory.text("Your input equals with nothing in the list. Please try again. What Expert do you want to search?")
                 )
                 flow.last_question_asked = Question.EXPERT
 
