@@ -1,13 +1,16 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # Licensed under the MIT License.
 # Test
+from enum import Enum
+
 from botbuilder.core import ActivityHandler, MessageFactory, TurnContext, ConversationState, UserState, MemoryStorage
 from botbuilder.schema import ChannelAccount, Attachment
-from helper.luis_helper import LuisHelper
+
+from helper.luis_helper import LuisHelper, Intent
 from recognizer import luis_recognizer_enigma
 from bots.CardBuilder import CardBuilder
 from connector import ConfluenceSearch
-from data_models import SearchInfo, Question, Conversation
+from data_models import Question, Conversation
 
 
 class Enigma_ConBot(ActivityHandler):
@@ -35,46 +38,76 @@ class Enigma_ConBot(ActivityHandler):
     ):
         for member in members_added:
             if member.id != turn_context.activity.recipient.id:
-                await turn_context.send_activity("Hi! Welcome my Name is Enigma. Please tell me what you search for?")
+                await turn_context.send_activity("Hi and welcome. My Name is Enigma. Pleased to meet you.")
+                await turn_context.send_activity(
+                    "I'll help you find information in confluence, just type what you are searching for.")
 
     async def on_message_activity(self, turn_context: TurnContext):
 
         # Get the state properties from the turn context.
-        info = await self.profile_accessor.get(turn_context, SearchInfo)
+        # info = await self.profile_accessor.get(turn_context, SearchInfo)
         flow = await self.flow_accessor.get(turn_context, Conversation)
 
-        await self._fill_out_information(flow, info, turn_context)
+        await self._fill_out_information(flow, turn_context)
 
         # Save changes to UserState and ConversationState
         await self.conversation_state.save_changes(turn_context)
         await self.user_state.save_changes(turn_context)
 
     async def _fill_out_information(
-            self, flow: Conversation, info: SearchInfo, turn_context: TurnContext
+            self, flow: Conversation, turn_context: TurnContext
     ):
 
-        user_input = turn_context.activity.text.strip()
-
-        # Hier muss der erste eingegebene Text an Luis gesendet werden
-        # MIt der Antwort von Luis müssen die Variablen Story und search_info befüllt werden
-
-        recognizer_result = await self._luis_recognizer.recognize(turn_context)
-        story, search_info = await LuisHelper.execute_luis_query(
+        intent, search_info = await LuisHelper.execute_luis_query(
             self._luis_recognizer, turn_context
         )
+        ## Luis Debugg
+        ########################################
+        recognizer_result = await self._luis_recognizer.recognize(turn_context)
 
-        await turn_context.send_activity(
-            MessageFactory.text(f"Intent: {story}")
+        '''await turn_context.send_activity(
+            MessageFactory.text(f"Intent: {intent}")
         )
         await turn_context.send_activity(
             MessageFactory.text(f"Entity: {search_info}")
         )
         await turn_context.send_activity(
             MessageFactory.text(f"Luis had this to say: {recognizer_result}")
-        )
+        )'''
+        ## Luis Debugg
+        ########################################
 
-        if flow.last_question_asked == Question.NONE:
-            if story == "experte" and search_info == "":
+        if intent == Intent.CONFUSED.value:
+
+            await turn_context.send_activity(
+                MessageFactory.text("Sorry, I didn't get that. Please try asking in a different way")
+            )
+
+        elif intent == Intent.SEARCH_ROLE.value:
+
+            information = ConfluenceSearch().get_roles()
+
+            if search_info != "" and search_info in information:
+                information = ConfluenceSearch().get_role(search_info)
+                response = self.cardbuilder.build_adaptive_role_card(information)
+                attachment = Attachment(content_type='application/vnd.microsoft.card.adaptive', content=response)
+                await turn_context.send_activity(
+                    MessageFactory.attachment(attachment)
+                )
+                await turn_context.send_activity(
+                    MessageFactory.text(
+                        "Enjoy!")
+                )
+            else:
+
+                response = "It seems you're searching for a specific role.\n\nHere are the current roles:  "
+                for x in information:
+                    response += "\n\n - " + x
+                await turn_context.send_activity(
+                    MessageFactory.text(f"{response}")
+                )
+
+            '''if story == "experte" and search_info == "":
                 await turn_context.send_activity(
                     MessageFactory.text("What Expert do you want to search?")
                 )
@@ -142,4 +175,4 @@ class Enigma_ConBot(ActivityHandler):
                     MessageFactory.text(
                         "Please don't hesitate to ask again.")
                 )
-            flow.last_question_asked = Question.NONE
+            flow.last_question_asked = Question.NONE'''

@@ -4,8 +4,8 @@ from botbuilder.core import TurnContext
 
 
 class Intent(Enum):
-    BOOK_FLIGHT = "BookFlight"
-    CANCEL = "Cancel"
+    CONFUSED = "None"
+    SEARCH_ROLE = "role"
     GET_WEATHER = "GetWeather"
     NONE_INTENT = "NoneIntent"
 
