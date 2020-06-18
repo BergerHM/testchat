@@ -6,7 +6,7 @@ from botbuilder.core import TurnContext
 class Intent(Enum):
     CONFUSED = "None"
     SEARCH_ROLE = "role"
-    GET_WEATHER = "GetWeather"
+    HELP = "Utilities.Help"
     NONE_INTENT = "NoneIntent"
 
 

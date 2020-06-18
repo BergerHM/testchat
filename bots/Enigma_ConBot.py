@@ -107,6 +107,11 @@ class Enigma_ConBot(ActivityHandler):
                     MessageFactory.text(f"{response}")
                 )
 
+        elif intent == Intent.HELP.value:
+            await turn_context.send_activity(
+                MessageFactory.text("At some point there will be text here explaining what i can do")
+            )
+
             '''if story == "experte" and search_info == "":
                 await turn_context.send_activity(
                     MessageFactory.text("What Expert do you want to search?")
