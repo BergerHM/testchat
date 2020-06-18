@@ -7,9 +7,11 @@ class CardBuilder():
             data = json.load(json_file)
         for x in information:
             # TODO: use columns depending on columns in information
-            # TODO: remove first line of the template
-            # TODO: print first line of table in fett
-            data['body'][0]['items'].append(self.create_column_set(x[0], x[1], x[2]))
+            # If it is the first entry in the table print it bold
+            if len(data['body'][0]['items']) == 0:
+                data['body'][0]['items'].append(self.create_column_set(x[0], x[1], x[2], True))
+            else:
+                data['body'][0]['items'].append(self.create_column_set(x[0], x[1], x[2]))
         # data['body'][1]['items'].append(self.create_column_set())
         return data
 
@@ -28,13 +30,26 @@ class CardBuilder():
         # TODO: find url tag and change it
         return card
 
-    def create_column_set(self, column1, column2, column3):
+    def create_column_set(self, column1, column2, column3, bold=False):
+        """
+        With this method you can create a columns set for AdaptiveCards
+
+        :param column1: value of first column
+        :param column2: value of second column
+        :param column3: value of third column
+        :param bold: if True the line will be bold
+        :return: column set to add in a card
+        """
+        weight = "default"
+        if bold:
+            weight = "bolder"
         column1 = {
             'type': "Column",
             'width': "stretch",
             'items': [{
                 'type': "TextBlock",
                 'text': column1,
+                'weight': weight,
                 'wrap': 'true'
             }]
         }
@@ -44,6 +59,7 @@ class CardBuilder():
             'items': [{
                 'type': "TextBlock",
                 'text': column2,
+                'weight': weight,
                 'wrap': 'true'
             }]
         }
@@ -53,6 +69,7 @@ class CardBuilder():
             'items': [{
                 'type': "TextBlock",
                 'text': column3,
+                'weight': weight,
                 'wrap': 'true'
             }]
         }
