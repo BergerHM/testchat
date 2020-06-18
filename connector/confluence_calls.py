@@ -42,13 +42,16 @@ class ConfluenceSearch:
         html = json_response['body']['storage']['value']
         self.parser.reset()
         self.parser.feed(html)
+        data.append(self.parser.tables[0][0])
         for i in self.parser.tables[0]:
             if i[0] == role:
                 data.append(i)
         return data
 
     def get_rolles(self):
-
+        """
+            Method used to return the avaiable roles for the search
+        """
         array = []
         payload = {}
         headers = {

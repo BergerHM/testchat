@@ -6,6 +6,9 @@ class CardBuilder():
         with open('cards/AdaptiveCardTemplate.json') as json_file:
             data = json.load(json_file)
         for x in information:
+            # TODO: use columns depending on columns in information
+            # TODO: remove first line of the template
+            # TODO: print first line of table in fett
             data['body'][0]['items'].append(self.create_column_set(x[0], x[1], x[2]))
         # data['body'][1]['items'].append(self.create_column_set())
         return data
