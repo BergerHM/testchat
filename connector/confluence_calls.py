@@ -30,6 +30,9 @@ class ConfluenceSearch:
         print(response.text.encode('utf8'))
 
     def get_rolle(self, role):
+        """
+        Get people with matching role from the table
+        """
         array = []
         data = []
         payload = {}
@@ -50,7 +53,7 @@ class ConfluenceSearch:
 
     def get_rolles(self):
         """
-            Method used to return the avaiable roles for the search
+            Method used to return the available roles for the search
         """
         array = []
         payload = {}
