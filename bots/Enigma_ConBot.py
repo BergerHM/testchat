@@ -83,6 +83,7 @@ class Enigma_ConBot(ActivityHandler):
                 MessageFactory.text("Sorry, I didn't get that. Please try asking in a different way")
             )
 
+        # Spezifische Rollensuche
         elif intent == Intent.SEARCH_ROLE.value:
 
             information = ConfluenceSearch().get_roles()
@@ -136,6 +137,8 @@ class Enigma_ConBot(ActivityHandler):
                     "Oh I am very sorry, I hope you will get well soon! Please don't hesitate to ask me something.")
             )
 
+        # Personensuche
+        # TODO: Methoden einfügen um Inhalt aus Confluence für PErsonensuche zu erhalten
         elif intent == Intent.SEARCH_PERSON.value:
 
             information = ConfluenceSearch().get_person(search_info)
@@ -144,6 +147,8 @@ class Enigma_ConBot(ActivityHandler):
                 MessageFactory.text(information)
             )
 
+        # Default Suche für allgm. Confluence-Suche (+wenn nur ein Wort eingegeben wird welches er nicht kennt)
+        # TODO: Default Suche muss mit Confluence funktionieren
         elif intent == Intent.SEARCH_TEXT.value:
 
             information = ConfluenceSearch().get_person(search_info)
