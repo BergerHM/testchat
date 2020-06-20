@@ -38,7 +38,7 @@ class Enigma_ConBot(ActivityHandler):
     ):
         for member in members_added:
             if member.id != turn_context.activity.recipient.id:
-                await turn_context.send_activity("Hi and welcome. My Name is Enigma. Pleased to meet you.")
+                await turn_context.send_activity("Hi and welcome. My Name is Enigma. I am pleased to meet you.")
                 await turn_context.send_activity(
                     "I'll help you find information in confluence, just type what you are searching for.")
 
