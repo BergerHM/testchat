@@ -3,16 +3,16 @@ import json
 
 class CardBuilder():
     # TODO: UMbenennen in tableCard weil hier ja eigentlich eine Tabelle in Karte umgewandelt wird
-    def build_adaptive_role_card(self, information):
+    def build_table_card(self, information):
         with open('cards/AdaptiveCardTemplate.json') as json_file:
             data = json.load(json_file)
         for x in information:
             # TODO: use columns depending on columns in information
             # If it is the first entry in the table print it bold
             if len(data['body'][0]['items']) == 0:
-                data['body'][0]['items'].append(self.create_column_set(x[0], x[1], x[2], True))
+                data['body'][0]['items'].append(self.create_column_set(x, True))
             else:
-                data['body'][0]['items'].append(self.create_column_set(x[0], x[1], x[2]))
+                data['body'][0]['items'].append(self.create_column_set(x))
         # data['body'][1]['items'].append(self.create_column_set())
         return data
 
@@ -21,6 +21,15 @@ class CardBuilder():
         jsondata = '{"$schema": "http://adaptivecards.io/schemas/adaptive-card.json","type": "AdaptiveCard","version": "1.0","body": [{"type": "Container","items": [{"type": "TextBlock","text": "Hier könnte Ihre Information stehen.","weight": "bolder","size": "medium"},{"type": "TextBlock","text": "Diese Karte ist noch in Arbeit","wrap": true}]}]}'
         data = json.loads(jsondata)
         return data
+
+    def table_card(self, data):
+        return None
+
+    def text_card(self):
+        return None
+
+    def picture_card(self):
+        return None
 
     def build_person_card(self):
         # TODO: Hier werden Informationen über einen Kontakt wieder gegeben
@@ -39,7 +48,7 @@ class CardBuilder():
         # TODO: find url tag and change it
         return card
 
-    def create_column_set(self, column1, column2, column3, bold=False):
+    def create_column_set(self, data, bold=False):
         """
         With this method you can create a columns set for AdaptiveCards
 
@@ -49,45 +58,34 @@ class CardBuilder():
         :param bold: if True the line will be bold
         :return: column set to add in a card
         """
-        weight = "default"
-        if bold:
-            weight = "bolder"
-        column1 = {
-            'type': "Column",
-            'width': "stretch",
-            'items': [{
-                'type': "TextBlock",
-                'text': column1,
-                'weight': weight,
-                'wrap': 'true'
-            }]
-        }
-        column2 = {
-            'type': "Column",
-            'width': "stretch",
-            'items': [{
-                'type': "TextBlock",
-                'text': column2,
-                'weight': weight,
-                'wrap': 'true'
-            }]
-        }
-        column3 = {
-            'type': "Column",
-            'width': "stretch",
-            'items': [{
-                'type': "TextBlock",
-                'text': column3,
-                'weight': weight,
-                'wrap': 'true'
-            }]
-        }
         columns = []
-        columns.append(column1)
-        columns.append(column2)
-        columns.append(column3)
+        for x in data:
+            columns.append(self.create_column(x, bold))
         columnset = {
             'type': "ColumnSet",
             'columns': columns
         }
         return columnset
+
+    def create_column(self, text, bold=False):
+        """
+        Create column for AdaptiveCard
+
+        :param text: value of  column
+        :param bold: if True the line will be bold
+        :return: column in json format
+        """
+        weight = "default"
+        if bold:
+            weight = "bolder"
+        column = {
+            'type': "Column",
+            'width': "stretch",
+            'items': [{
+                'type': "TextBlock",
+                'text': text,
+                'weight': weight,
+                'wrap': 'true'
+            }]
+        }
+        return column

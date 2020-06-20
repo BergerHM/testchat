@@ -88,8 +88,10 @@ class Enigma_ConBot(ActivityHandler):
             information = ConfluenceSearch().get_roles()
 
             if search_info != "" and search_info in information:
+                # Get role information from Confluence API
                 information = ConfluenceSearch().get_role(search_info)
-                response = self.cardbuilder.build_adaptive_role_card(information)
+                # Create AdaptiveCard out of Confluence Information
+                response = self.cardbuilder.build_table_card(information)
                 attachment = Attachment(content_type='application/vnd.microsoft.card.adaptive', content=response)
                 await turn_context.send_activity(
                     MessageFactory.attachment(attachment)

@@ -75,7 +75,7 @@ class ConfluenceSearch:
 
     def text_search(self, search):
         results = []
-        url = "https://ccwi.atlassian.net/wiki/rest/api/content/search?cql=text~Coach"
+        url = "https://ccwi.atlassian.net/wiki/rest/api/content/search?cql=text~" + search
         payload = {}
         headers = {
             'Authorization': 'Basic bHVrYXMuYWx0ZW5zdHJhc3NlckBobS5lZHU6YjBWbGpSc3pxRUFQWE1qQnlmMEdCMEQ4'
@@ -90,4 +90,4 @@ class ConfluenceSearch:
         return None
 
 search = ConfluenceSearch()
-search.text_search("Coach")
+search.text_search("Agile")
