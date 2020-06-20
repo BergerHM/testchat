@@ -30,7 +30,7 @@ class ConfluenceSearch:
         response = requests.request("GET", url, headers=self.headers, data=self.payload)
         print(response.text.encode('utf8'))
 
-    def get_rolle(self, role):
+    def get_role(self, role):
         array = []
         data = []
         payload = {}
@@ -48,7 +48,7 @@ class ConfluenceSearch:
                 data.append(i)
         return data
 
-    def get_rolles(self):
+    def get_roles(self):
 
         array = []
         payload = {}
@@ -98,6 +98,7 @@ class ConfluenceSearch:
             if i[0] == role:
                 data.append(i)
         return data
+
 
 search = ConfluenceSearch()
 search.text_search("Coach")

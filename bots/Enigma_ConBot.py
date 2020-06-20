@@ -38,7 +38,7 @@ class Enigma_ConBot(ActivityHandler):
     ):
         for member in members_added:
             if member.id != turn_context.activity.recipient.id:
-                await turn_context.send_activity("Hi and welcome. My Name is Enigma. Pleased to meet you.")
+                await turn_context.send_activity("Hi and welcome. My Name is Enigma. I am pleased to meet you.")
                 await turn_context.send_activity(
                     "I'll help you find information in confluence, just type what you are searching for.")
 
@@ -65,7 +65,7 @@ class Enigma_ConBot(ActivityHandler):
         ########################################
         recognizer_result = await self._luis_recognizer.recognize(turn_context)
 
-        '''await turn_context.send_activity(
+        await turn_context.send_activity(
             MessageFactory.text(f"Intent: {intent}")
         )
         await turn_context.send_activity(
@@ -73,7 +73,7 @@ class Enigma_ConBot(ActivityHandler):
         )
         await turn_context.send_activity(
             MessageFactory.text(f"Luis had this to say: {recognizer_result}")
-        )'''
+        )
         ## Luis Debugg
         ########################################
 
@@ -134,6 +134,22 @@ class Enigma_ConBot(ActivityHandler):
             await turn_context.send_activity(
                 MessageFactory.text(
                     "Oh I am very sorry, I hope you will get well soon! Please don't hesitate to ask me something.")
+            )
+
+        elif intent == Intent.SEARCH_PERSON.value:
+
+            information = ConfluenceSearch().get_person(search_info)
+
+            await turn_context.send_activity(
+                MessageFactory.text(information)
+            )
+
+        elif intent == Intent.SEARCH_TEXT.value:
+
+            information = ConfluenceSearch().get_person(search_info)
+
+            await turn_context.send_activity(
+                MessageFactory.text(information)
             )
 
             '''if story == "experte" and search_info == "":
