@@ -87,22 +87,7 @@ class ConfluenceSearch:
         return results
 
     def get_person(self, name):
-        array = []
-        data = []
-        payload = {}
-        headers = {
-            'Authorization': 'Basic bHVrYXMuYWx0ZW5zdHJhc3NlckBobS5lZHU6YjBWbGpSc3pxRUFQWE1qQnlmMEdCMEQ4'
-        }
-        url = "https://ccwi.atlassian.net/wiki/rest/api/content/47939585?expand=body.storage"
-        response = requests.request("GET", url, headers=headers, data=payload)
-        json_response = response.json()
-        html = json_response['body']['storage']['value']
-        self.parser.reset()
-        self.parser.feed(html)
-        for i in self.parser.tables[0]:
-            if i[0] == role:
-                data.append(i)
-        return data
+        return None
 
 search = ConfluenceSearch()
 search.text_search("Coach")

@@ -2,6 +2,7 @@ import json
 
 
 class CardBuilder():
+    # TODO: UMbenennen in tableCard weil hier ja eigentlich eine Tabelle in Karte umgewandelt wird
     def build_adaptive_role_card(self, information):
         with open('cards/AdaptiveCardTemplate.json') as json_file:
             data = json.load(json_file)
@@ -17,6 +18,14 @@ class CardBuilder():
 
     def build_generic_card(self, info):
         # TODO: Try to build a generic card for confluence pages
+        jsondata = '{"$schema": "http://adaptivecards.io/schemas/adaptive-card.json","type": "AdaptiveCard","version": "1.0","body": [{"type": "Container","items": [{"type": "TextBlock","text": "Hier könnte Ihre Information stehen.","weight": "bolder","size": "medium"},{"type": "TextBlock","text": "Diese Karte ist noch in Arbeit","wrap": true}]}]}'
+        data = json.loads(jsondata)
+        return data
+
+    def build_person_card(self):
+        # TODO: Hier werden Informationen über einen Kontakt wieder gegeben
+        jsondata = '{"$schema": "http://adaptivecards.io/schemas/adaptive-card.json","type": "AdaptiveCard","version": "1.0","body": [{"type": "Container","items": [{"type": "TextBlock","text": "Hier könnte Ihre Information stehen.","weight": "bolder","size": "medium"},{"type": "TextBlock","text": "Diese Karte ist noch in Arbeit","wrap": true}]}]}'
+        data = json.loads(jsondata)
         return None
 
     def set_url(self, card, url):
