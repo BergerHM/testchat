@@ -16,18 +16,21 @@ class CardBuilder():
 
     def build_generic_card(self, typ, data):
         # TODO: Try to build a generic card for confluence pages
-        jsondata = '{"$schema": "http://adaptivecards.io/schemas/adaptive-card.json","type": "AdaptiveCard","version": "1.0","body": [{"type": "Container","items": [{"type": "TextBlock","text": "Hier könnte Ihre Information stehen.","weight": "bolder","size": "medium"},{"type": "TextBlock","text": "Diese Karte ist noch in Arbeit","wrap": true}]}]}'
-        data = json.loads(jsondata)
+        #jsondata = '{"$schema": "http://adaptivecards.io/schemas/adaptive-card.json","type": "AdaptiveCard","version": "1.0","body": [{"type": "Container","items": [{"type": "TextBlock","text": "Hier könnte Ihre Information stehen.","weight": "bolder","size": "medium"},{"type": "TextBlock","text": "Diese Karte ist noch in Arbeit","wrap": true}]}]}'
+        #data = json.loads(jsondata)
         if typ == "table":
-            return self.build_table_card(data)
+            return self.build_table_card(data[0])
         elif typ == "picture":
-            self.build_picture_card()
+            return self.build_picture_card(data)
+        elif typ == "text":
+            return self.build_text_card(data)
+        else:
+            raise ValueError("Data Typ could not be regonized")
+
+    def build_text_card(self, data):
         return data
 
-    def build_text_card(self):
-        return None
-
-    def build_picture_card(self):
+    def build_picture_card(self, data):
         return None
 
     def build_person_card(self):

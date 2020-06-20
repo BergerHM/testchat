@@ -45,8 +45,8 @@ class ConfluenceSearch:
         html = json_response['body']['storage']['value']
         parser = HTMLTableParser()
         parser.feed(html)
-        data.append(self.parser.tables[0][0])
-        for i in self.parser.tables[0]:
+        data.append(parser.tables[0][0])
+        for i in parser.tables[0]:
             if i[0] == role:
                 data.append(i)
         return data
@@ -66,7 +66,7 @@ class ConfluenceSearch:
         html = json_response['body']['storage']['value']
         parser = HTMLTableParser()
         parser.feed(html)
-        for i in self.parser.tables[0]:
+        for i in parser.tables[0]:
             if i[0] != "Rolle":
                 array.append(i[0])
             # Remove duplicates
@@ -105,17 +105,19 @@ class ConfluenceSearch:
         html = json_response['body']['storage']['value']
         if "table" in html:
             print("Tabelle gefunden")
+            rows = []
             tableparser = HTMLTableParser()
             tableparser.feed(html)
-            return "table", tableparser
+            for i in tableparser.tables:
+                rows.append(i)
+            return "table", rows
         elif "image" in html:
             # TODO: Decide what to do with pictures
             print("image gefunden")
             return "picture"
         else:
             parsed_html = BeautifulSoup(html)
-            print(parsed_html.get_text())
-            return "text", parsed_html
+            return "text", parsed_html.get_text()
 
     def generic_search(self, search_term):
         results = self.confluence_search(search_term)
@@ -125,6 +127,3 @@ class ConfluenceSearch:
 
     def get_person(self, name):
         return None
-
-search = ConfluenceSearch()
-search.generic_search("Coach")
