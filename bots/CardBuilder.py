@@ -2,12 +2,10 @@ import json
 
 
 class CardBuilder():
-    # TODO: UMbenennen in tableCard weil hier ja eigentlich eine Tabelle in Karte umgewandelt wird
     def build_table_card(self, information):
         with open('cards/AdaptiveCardTemplate.json') as json_file:
             data = json.load(json_file)
         for x in information:
-            # TODO: use columns depending on columns in information
             # If it is the first entry in the table print it bold
             if len(data['body'][0]['items']) == 0:
                 data['body'][0]['items'].append(self.create_column_set(x, True))
@@ -16,19 +14,20 @@ class CardBuilder():
         # data['body'][1]['items'].append(self.create_column_set())
         return data
 
-    def build_generic_card(self, info):
+    def build_generic_card(self, typ, data):
         # TODO: Try to build a generic card for confluence pages
         jsondata = '{"$schema": "http://adaptivecards.io/schemas/adaptive-card.json","type": "AdaptiveCard","version": "1.0","body": [{"type": "Container","items": [{"type": "TextBlock","text": "Hier könnte Ihre Information stehen.","weight": "bolder","size": "medium"},{"type": "TextBlock","text": "Diese Karte ist noch in Arbeit","wrap": true}]}]}'
         data = json.loads(jsondata)
+        if typ == "table":
+            return self.build_table_card(data)
+        elif typ == "picture":
+            self.build_picture_card()
         return data
 
-    def table_card(self, data):
+    def build_text_card(self):
         return None
 
-    def text_card(self):
-        return None
-
-    def picture_card(self):
+    def build_picture_card(self):
         return None
 
     def build_person_card(self):

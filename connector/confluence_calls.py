@@ -3,7 +3,7 @@
 import requests
 
 from connector.htmltableparser import HTMLTableParser
-
+from bs4 import BeautifulSoup
 
 class ConfluenceSearch:
     payload = {}
@@ -43,8 +43,8 @@ class ConfluenceSearch:
         response = requests.request("GET", url, headers=headers, data=payload)
         json_response = response.json()
         html = json_response['body']['storage']['value']
-        self.parser.reset()
-        self.parser.feed(html)
+        parser = HTMLTableParser()
+        parser.feed(html)
         data.append(self.parser.tables[0][0])
         for i in self.parser.tables[0]:
             if i[0] == role:
@@ -64,8 +64,8 @@ class ConfluenceSearch:
         response = requests.request("GET", url, headers=headers, data=payload)
         json_response = response.json()
         html = json_response['body']['storage']['value']
-        self.parser.reset()
-        self.parser.feed(html)
+        parser = HTMLTableParser()
+        parser.feed(html)
         for i in self.parser.tables[0]:
             if i[0] != "Rolle":
                 array.append(i[0])
@@ -73,9 +73,14 @@ class ConfluenceSearch:
             array = list(dict.fromkeys(array))
         return array
 
-    def text_search(self, search):
+    def confluence_search(self, search_term):
+        """
+        Search with search begriff in the confuence search
+
+        :return results: list with search results
+        """
         results = []
-        url = "https://ccwi.atlassian.net/wiki/rest/api/content/search?cql=text~" + search
+        url = "https://ccwi.atlassian.net/wiki/rest/api/content/search?cql=text~" + search_term
         payload = {}
         headers = {
             'Authorization': 'Basic bHVrYXMuYWx0ZW5zdHJhc3NlckBobS5lZHU6YjBWbGpSc3pxRUFQWE1qQnlmMEdCMEQ4'
@@ -86,8 +91,40 @@ class ConfluenceSearch:
             results.append(i)
         return results
 
+    def get_confluence_site_content(self,site_id):
+        """
+            Returns the content of given Confluence Site
+        """
+        payload = {}
+        headers = {
+            'Authorization': 'Basic bHVrYXMuYWx0ZW5zdHJhc3NlckBobS5lZHU6YjBWbGpSc3pxRUFQWE1qQnlmMEdCMEQ4'
+        }
+        url = "https://ccwi.atlassian.net/wiki/rest/api/content/" + site_id + "?expand=body.storage"
+        response = requests.request("GET", url, headers=headers, data=payload)
+        json_response = response.json()
+        html = json_response['body']['storage']['value']
+        if "table" in html:
+            print("Tabelle gefunden")
+            tableparser = HTMLTableParser()
+            tableparser.feed(html)
+            return "table", tableparser
+        elif "image" in html:
+            # TODO: Decide what to do with pictures
+            print("image gefunden")
+            return "picture"
+        else:
+            parsed_html = BeautifulSoup(html)
+            print(parsed_html.get_text())
+            return "text", parsed_html
+
+    def generic_search(self, search_term):
+        results = self.confluence_search(search_term)
+        typ, content = self.get_confluence_site_content(results[0]['id'])
+        return typ, content
+
+
     def get_person(self, name):
         return None
 
 search = ConfluenceSearch()
-search.text_search("Agile")
+search.generic_search("Coach")
