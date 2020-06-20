@@ -10,6 +10,10 @@ class CardBuilder():
         # data['body'][1]['items'].append(self.create_column_set())
         return data
 
+    def build_generic_card(self, info):
+        # TODO: Try to build a generic card for confluence pages
+        return None
+
     def set_url(self, card, url):
         """
             Method adds a URL to any Action.OpenUrl field
