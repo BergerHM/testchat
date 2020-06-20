@@ -38,7 +38,7 @@ class Enigma_ConBot(ActivityHandler):
     ):
         for member in members_added:
             if member.id != turn_context.activity.recipient.id:
-                await turn_context.send_activity("Hi and welcome. My Name is Enigma. I am pleased to meet you.")
+                await turn_context.send_activity("Hi and welcome. My Name is Enigma. Pleased to meet you.")
                 await turn_context.send_activity(
                     "I'll help you find information in confluence, just type what you are searching for.")
 
@@ -110,6 +110,30 @@ class Enigma_ConBot(ActivityHandler):
         elif intent == Intent.HELP.value:
             await turn_context.send_activity(
                 MessageFactory.text("At some point there will be text here explaining what i can do")
+            )
+
+        elif intent == Intent.WHO.value:
+            await turn_context.send_activity(
+                MessageFactory.text(
+                    "Actually my Daddies are: Lukas Altenstrasser, Adiran Berger, Justin Bitterlich and Michaela Saenger")
+            )
+
+        elif intent == Intent.HOW.value:
+            await turn_context.send_activity(
+                MessageFactory.text(
+                    "Im fine thanks and you?")
+            )
+
+        elif intent == Intent.USERANSWER_Y.value:
+            await turn_context.send_activity(
+                MessageFactory.text(
+                    "Thats perfect. So do you have a question for me?")
+            )
+
+        elif intent == Intent.USERANSWER_N.value:
+            await turn_context.send_activity(
+                MessageFactory.text(
+                    "Oh I am very sorry, I hope you will get well soon! Please don't hesitate to ask me something.")
             )
 
             '''if story == "experte" and search_info == "":

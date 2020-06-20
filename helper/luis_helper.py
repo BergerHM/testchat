@@ -5,9 +5,15 @@ from botbuilder.core import TurnContext
 
 class Intent(Enum):
     CONFUSED = "None"
-    SEARCH_ROLE = "role"
+    SEARCH_ROLE = "SearchRole"
+    SEARCH_PERSON = "SearchPerson"
     HELP = "Utilities.Help"
     NONE_INTENT = "NoneIntent"
+    WHO = "WhoIs"
+    HOW = "HOWRU"
+    USERANSWER_Y = "USER_ANSWER_Positive"
+    USERANSWER_N = "USER_ANSWER_Negative"
+    SEARCH_TEXT = "SearchText"
 
 
 class LuisHelper:
