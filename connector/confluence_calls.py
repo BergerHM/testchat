@@ -117,6 +117,7 @@ class ConfluenceSearch:
             return "picture"
         else:
             parsed_html = BeautifulSoup(html)
+            # TODO: Text schöner formatieren also absätze beachten
             return "text", parsed_html.get_text()
 
     def generic_search(self, search_term):

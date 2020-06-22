@@ -28,7 +28,10 @@ class CardBuilder():
             raise ValueError("Data Typ could not be regonized")
 
     def build_text_card(self, data):
-        return data
+        with open('cards/TextCardTemplate.json') as json_file:
+            card = json.load(json_file)
+            card['body'][1]['items'][0]['text'] = data
+        return card
 
     def build_picture_card(self, data):
         return None
