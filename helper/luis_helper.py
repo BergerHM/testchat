@@ -5,9 +5,17 @@ from botbuilder.core import TurnContext
 
 class Intent(Enum):
     CONFUSED = "None"
-    SEARCH_ROLE = "role"
-    GET_WEATHER = "GetWeather"
+    SEARCH_ROLE = "SearchRole"
+    SEARCH_PERSON = "SearchPerson"
+    HELP = "Utilities.Help"
     NONE_INTENT = "NoneIntent"
+    WHO = "WhoIs"
+    HOW = "HOWRU"
+    USERANSWER_Y = "USER_ANSWER_Positive"
+    USERANSWER_N = "USER_ANSWER_Negative"
+    SEARCH_TEXT = "SearchText"
+
+
 
 
 class LuisHelper:
@@ -35,9 +43,15 @@ class LuisHelper:
 
         # We need to get the result from the LUIS JSON which at every level returns an array.
 
-        entity = recognizer_result.entities.get("$instance", {}).get(
-            "expert", []
-        )
+        if intent == Intent.SEARCH_ROLE.value:
+            entity = recognizer_result.entities.get("$instance", {}).get(
+                "role", []
+            )
+
+        elif intent == Intent.SEARCH_PERSON.value:
+            entity = recognizer_result.entities.get("$instance", {}).get(
+                "person", []
+            )
 
         if len(entity) > 0:
             entity = entity[0]["text"].capitalize()

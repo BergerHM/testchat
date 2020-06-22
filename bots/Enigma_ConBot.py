@@ -38,7 +38,7 @@ class Enigma_ConBot(ActivityHandler):
     ):
         for member in members_added:
             if member.id != turn_context.activity.recipient.id:
-                await turn_context.send_activity("Hi and welcome. My Name is Enigma. Pleased to meet you.")
+                await turn_context.send_activity("Hi and welcome. My Name is Enigma. I am pleased to meet you.")
                 await turn_context.send_activity(
                     "I'll help you find information in confluence, just type what you are searching for.")
 
@@ -65,7 +65,7 @@ class Enigma_ConBot(ActivityHandler):
         ########################################
         recognizer_result = await self._luis_recognizer.recognize(turn_context)
 
-        '''await turn_context.send_activity(
+        await turn_context.send_activity(
             MessageFactory.text(f"Intent: {intent}")
         )
         await turn_context.send_activity(
@@ -73,7 +73,7 @@ class Enigma_ConBot(ActivityHandler):
         )
         await turn_context.send_activity(
             MessageFactory.text(f"Luis had this to say: {recognizer_result}")
-        )'''
+        )
         ## Luis Debugg
         ########################################
 
@@ -83,6 +83,7 @@ class Enigma_ConBot(ActivityHandler):
                 MessageFactory.text("Sorry, I didn't get that. Please try asking in a different way")
             )
 
+        # Spezifische Rollensuche
         elif intent == Intent.SEARCH_ROLE.value:
 
             information = ConfluenceSearch().get_roles()
@@ -108,6 +109,55 @@ class Enigma_ConBot(ActivityHandler):
                 await turn_context.send_activity(
                     MessageFactory.text(f"{response}")
                 )
+
+        elif intent == Intent.HELP.value:
+            await turn_context.send_activity(
+                MessageFactory.text("At some point there will be text here explaining what i can do")
+            )
+
+        elif intent == Intent.WHO.value:
+            await turn_context.send_activity(
+                MessageFactory.text(
+                    "Actually my Daddies are: Lukas Altenstrasser, Adiran Berger, Justin Bitterlich and Michaela Saenger")
+            )
+
+        elif intent == Intent.HOW.value:
+            await turn_context.send_activity(
+                MessageFactory.text(
+                    "Im fine thanks and you?")
+            )
+
+        elif intent == Intent.USERANSWER_Y.value:
+            await turn_context.send_activity(
+                MessageFactory.text(
+                    "Thats perfect. So do you have a question for me?")
+            )
+
+        elif intent == Intent.USERANSWER_N.value:
+            await turn_context.send_activity(
+                MessageFactory.text(
+                    "Oh I am very sorry, I hope you will get well soon! Please don't hesitate to ask me something.")
+            )
+
+        # Personensuche
+        # TODO: Methoden einfügen um Inhalt aus Confluence für PErsonensuche zu erhalten
+        elif intent == Intent.SEARCH_PERSON.value:
+
+            information = ConfluenceSearch().get_person(search_info)
+
+            await turn_context.send_activity(
+                MessageFactory.text(information)
+            )
+
+        # Default Suche für allgm. Confluence-Suche (+wenn nur ein Wort eingegeben wird welches er nicht kennt)
+        # TODO: Default Suche muss mit Confluence funktionieren
+        elif intent == Intent.SEARCH_TEXT.value:
+
+            information = ConfluenceSearch().get_person(search_info)
+
+            await turn_context.send_activity(
+                MessageFactory.text(information)
+            )
 
             '''if story == "experte" and search_info == "":
                 await turn_context.send_activity(

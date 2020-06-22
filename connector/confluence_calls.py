@@ -1,6 +1,7 @@
 # Methods for searching Confluence
 
 import requests
+from docutils.parsers.rst.roles import role
 
 from connector.htmltableparser import HTMLTableParser
 from bs4 import BeautifulSoup
