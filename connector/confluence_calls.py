@@ -44,7 +44,7 @@ class ConfluenceSearch:
         self.parser.reset()
         self.parser.feed(html)
         for i in self.parser.tables[0]:
-            if i[0] == role:
+            if i[0].lower() == role.lower():
                 data.append(i)
         return data
 
