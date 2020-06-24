@@ -163,14 +163,19 @@ class Enigma_ConBot(ActivityHandler):
                 MessageFactory.text(
                     "I'll look up " + user_text + " in confluence for you.")
             )
-
-            typ, response = ConfluenceSearch().generic_search(user_text)
-            result = self.cardbuilder.build_generic_card(typ, response)
-            attachment = Attachment(content_type='application/vnd.microsoft.card.adaptive', content=result)
-            await turn_context.send_activity(
-                MessageFactory.attachment(attachment)
-            )
-            await turn_context.send_activity(
-                MessageFactory.text(
-                    "Enjoy!")
-            )
+            try:
+                typ, response = ConfluenceSearch().generic_search(user_text)
+                result = self.cardbuilder.build_generic_card(typ, response)
+                attachment = Attachment(content_type='application/vnd.microsoft.card.adaptive', content=result)
+                await turn_context.send_activity(
+                    MessageFactory.attachment(attachment)
+                )
+                await turn_context.send_activity(
+                    MessageFactory.text(
+                        "Enjoy!")
+                )
+            except Exception as exception:
+                await turn_context.send_activity(
+                    MessageFactory.text(
+                        "I can't find what you are searching for in conlfuence.")
+                )
