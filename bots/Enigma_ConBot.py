@@ -66,7 +66,8 @@ class Enigma_ConBot(ActivityHandler):
         # Luis Debug
         ########################################
         recognizer_result = await self._luis_recognizer.recognize(turn_context)
-
+        scoring = recognizer_result.get_top_scoring_intent()
+        print(scoring.score)
         await turn_context.send_activity(
             MessageFactory.text(f"Intent: {intent}")
         )
@@ -75,7 +76,7 @@ class Enigma_ConBot(ActivityHandler):
         )
 
         await turn_context.send_activity(
-            MessageFactory.text(f"Luis had this to say: {recognizer_result}")
+            MessageFactory.text(f"Luis had this to say: {recognizer_result.get_top_scoring_intent()}")
         )
         # Luis Debug
         ########################################
