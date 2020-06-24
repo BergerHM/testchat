@@ -6,47 +6,7 @@
     {
       "type": "Container",
       "items": [
-        {
-          "type": "ColumnSet",
-          "columns": [
-            {
-              "type": "Column",
-              "width": "stretch",
-              "items": [
-                {
-                  "type": "TextBlock",
-                  "text": "Rolle",
-                  "weight": "bolder",
-                  "wrap": true
-                }
-              ]
-            },
-            {
-              "type": "Column",
-              "width": "stretch",
-              "items": [
-                {
-                  "type": "TextBlock",
-                  "text": "Name",
-                  "weight": "bolder",
-                  "wrap": true
-                }
-              ]
-            },
-            {
-              "type": "Column",
-              "width": "stretch",
-              "items": [
-                {
-                  "type": "TextBlock",
-                  "text": "Information",
-                  "weight": "bolder",
-                  "wrap": true
-                }
-              ]
-            }
-          ]
-        }
+
       ]
     }
   ],
