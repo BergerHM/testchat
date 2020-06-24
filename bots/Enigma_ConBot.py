@@ -63,11 +63,16 @@ class Enigma_ConBot(ActivityHandler):
         intent, search_info = await LuisHelper.execute_luis_query(
             self._luis_recognizer, turn_context
         )
+
+        recognizer_result = await self._luis_recognizer.recognize(turn_context)
+        # Luis Score for the Intent
+        scoring = recognizer_result.get_top_scoring_intent().score
+
+        # Score threshold
+        score_threshold = 0.5
+
         # Luis Debug
         ########################################
-        recognizer_result = await self._luis_recognizer.recognize(turn_context)
-        scoring = recognizer_result.get_top_scoring_intent()
-        print(scoring.score)
         await turn_context.send_activity(
             MessageFactory.text(f"Intent: {intent}")
         )
@@ -75,14 +80,11 @@ class Enigma_ConBot(ActivityHandler):
             MessageFactory.text(f"Entity: {search_info}")
         )
 
-        await turn_context.send_activity(
-            MessageFactory.text(f"Luis had this to say: {recognizer_result.get_top_scoring_intent()}")
-        )
         # Luis Debug
         ########################################
 
         # Spezifische Rollensuche
-        if intent == Intent.SEARCH_ROLE.value:
+        if intent == Intent.SEARCH_ROLE.value and scoring > score_threshold:
 
             information = ConfluenceSearch().get_roles()
             await turn_context.send_activity(
@@ -113,7 +115,8 @@ class Enigma_ConBot(ActivityHandler):
 
         # Personensuche
         # TODO: Methoden einfügen um Inhalt aus Confluence für PErsonensuche zu erhalten
-        elif intent == Intent.SEARCH_PERSON.value:
+        elif intent == Intent.SEARCH_PERSON.value and scoring > score_threshold:
+
 
             await turn_context.send_activity(
                 MessageFactory.text(
@@ -121,19 +124,19 @@ class Enigma_ConBot(ActivityHandler):
             )
 
         # Show help message
-        elif intent == Intent.HELP.value:
+        elif intent == Intent.HELP.value and scoring > score_threshold:
             await turn_context.send_activity(
                 MessageFactory.text("At some point there will be text here explaining what i can do")
             )
 
-        elif intent == Intent.WHO.value:
+        elif intent == Intent.WHO.value and scoring > score_threshold:
             await turn_context.send_activity(
                 MessageFactory.text(
                     "Actually my Daddies are: Lukas Altenstrasser, Adiran Berger, Justin Bitterlich and Michaela "
                     "Saenger")
             )
 
-        elif intent == Intent.HOW.value:
+        elif intent == Intent.HOW.value and scoring > score_threshold:
             list1 = ("Same old, same old.", "I’m alive!", "Quite well, old chap, quite well indeed!",
                      "Are we pretending i have moods?", "Never been better, let us get to work.")
             result = random.choice(list1)
@@ -142,13 +145,13 @@ class Enigma_ConBot(ActivityHandler):
 
             )
 
-        elif intent == Intent.USERANSWER_Y.value:
+        elif intent == Intent.USERANSWER_Y.value and scoring > score_threshold:
             await turn_context.send_activity(
                 MessageFactory.text(
                     "That's perfect. So do you have a question for me?")
             )
 
-        elif intent == Intent.USERANSWER_N.value:
+        elif intent == Intent.USERANSWER_N.value and scoring > score_threshold:
             await turn_context.send_activity(
                 MessageFactory.text(
                     "Oh I am very sorry, I hope you will get well soon! Please don't hesitate to ask me something.")
@@ -163,4 +166,15 @@ class Enigma_ConBot(ActivityHandler):
             await turn_context.send_activity(
                 MessageFactory.text(
                     "I'll look up " + user_text + " in confluence for you.")
+            )
+
+            response = ConfluenceSearch().confluence_search(user_text)
+            result = self.cardbuilder.build_table_card(response)
+            attachment = Attachment(content_type='application/vnd.microsoft.card.adaptive', content=result)
+            await turn_context.send_activity(
+                MessageFactory.attachment(attachment)
+            )
+            await turn_context.send_activity(
+                MessageFactory.text(
+                    "Enjoy!")
             )

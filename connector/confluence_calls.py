@@ -6,6 +6,7 @@ from docutils.parsers.rst.roles import role
 from connector.htmltableparser import HTMLTableParser
 from bs4 import BeautifulSoup
 
+
 class ConfluenceSearch:
     payload = {}
     headers = {
@@ -92,7 +93,7 @@ class ConfluenceSearch:
             results.append(i)
         return results
 
-    def get_confluence_site_content(self,site_id):
+    def get_confluence_site_content(self, site_id):
         """
             Returns the content of given Confluence Site
         """
@@ -125,7 +126,6 @@ class ConfluenceSearch:
         results = self.confluence_search(search_term)
         typ, content = self.get_confluence_site_content(results[0]['id'])
         return typ, content
-
 
     def get_person(self, name):
         return None
