@@ -1,13 +1,16 @@
+import json
 from enum import Enum
+from typing import Dict
+
 from botbuilder.ai.luis import LuisRecognizer
-from botbuilder.core import TurnContext
+from botbuilder.core import TurnContext, IntentScore, TopIntent
 
 
 class Intent(Enum):
     CONFUSED = "None"
     SEARCH_ROLE = "SearchRole"
     SEARCH_PERSON = "SearchPerson"
-    HELP = "Utilities.Help"
+    HELP = "Utilities_Help"
     NONE_INTENT = "NoneIntent"
     WHO = "WhoIs"
     HOW = "HOWRU"
@@ -16,6 +19,16 @@ class Intent(Enum):
     SEARCH_TEXT = "SearchText"
 
 
+def top_intent(intents: Dict[Intent, dict]) -> TopIntent:
+    max_intent = Intent.NONE_INTENT
+    max_value = 0.0
+
+    for intent, value in intents:
+        intent_score = IntentScore(value)
+        if intent_score.score > max_value:
+            max_intent, max_value = intent, intent_score.score
+
+    return TopIntent(max_intent, max_value)
 
 
 class LuisHelper:
@@ -50,10 +63,10 @@ class LuisHelper:
 
         elif intent == Intent.SEARCH_PERSON.value:
             entity = recognizer_result.entities.get("$instance", {}).get(
-                "person", []
+                "name", []
             )
 
-        if len(entity) > 0:
-            entity = entity[0]["text"].capitalize()
+        if entity and len(entity) > 0:
+            entity = entity[0]["text"].lower()
 
         return intent, entity
