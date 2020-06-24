@@ -6,6 +6,7 @@ from docutils.parsers.rst.roles import role
 from connector.htmltableparser import HTMLTableParser
 from bs4 import BeautifulSoup
 
+
 class ConfluenceSearch:
     payload = {}
     headers = {
@@ -92,7 +93,7 @@ class ConfluenceSearch:
             results.append(i)
         return results
 
-    def get_confluence_site_content(self,site_id):
+    def get_confluence_site_content(self, site_id):
         """
             Returns the content of given Confluence Site
         """
@@ -115,17 +116,19 @@ class ConfluenceSearch:
         elif "image" in html:
             # TODO: Decide what to do with pictures
             print("image gefunden")
-            return "picture"
+            return "picture", "picture data"
         else:
             parsed_html = BeautifulSoup(html)
             # TODO: Text schöner formatieren also absätze beachten
             return "text", parsed_html.get_text()
 
     def generic_search(self, search_term):
-        results = self.confluence_search(search_term)
-        typ, content = self.get_confluence_site_content(results[0]['id'])
-        return typ, content
-
+        try:
+            results = self.confluence_search(search_term)
+            typ, content = self.get_confluence_site_content(results[0]['id'])
+            return typ, content
+        except Exception as error:
+            print("Search term is None " + repr(error))
 
     def get_person(self, name):
         return None
