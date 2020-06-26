@@ -73,12 +73,12 @@ class Enigma_ConBot(ActivityHandler):
 
         # Luis Debug
         ########################################
-        await turn_context.send_activity(
+        '''await turn_context.send_activity(
             MessageFactory.text(f"Intent: {intent}")
         )
         await turn_context.send_activity(
             MessageFactory.text(f"Entity: {search_info}")
-        )
+        )'''
 
         # Luis Debug
         ########################################
@@ -87,9 +87,6 @@ class Enigma_ConBot(ActivityHandler):
         if intent == Intent.SEARCH_ROLE.value and scoring > score_threshold:
 
             information = ConfluenceSearch().get_roles()
-            await turn_context.send_activity(
-                MessageFactory.text(information)
-            )
 
             if search_info != "" and search_info in information:
                 # Get role information from Confluence API
@@ -116,7 +113,6 @@ class Enigma_ConBot(ActivityHandler):
         # Personensuche
         # TODO: Methoden einfügen um Inhalt aus Confluence für PErsonensuche zu erhalten
         elif intent == Intent.SEARCH_PERSON.value and scoring > score_threshold:
-
 
             await turn_context.send_activity(
                 MessageFactory.text(
@@ -167,14 +163,19 @@ class Enigma_ConBot(ActivityHandler):
                 MessageFactory.text(
                     "I'll look up " + user_text + " in confluence for you.")
             )
-
-            response = ConfluenceSearch().confluence_search(user_text)
-            result = self.cardbuilder.build_table_card(response)
-            attachment = Attachment(content_type='application/vnd.microsoft.card.adaptive', content=result)
-            await turn_context.send_activity(
-                MessageFactory.attachment(attachment)
-            )
-            await turn_context.send_activity(
-                MessageFactory.text(
-                    "Enjoy!")
-            )
+            try:
+                typ, response = ConfluenceSearch().generic_search(user_text)
+                result = self.cardbuilder.build_generic_card(typ, response)
+                attachment = Attachment(content_type='application/vnd.microsoft.card.adaptive', content=result)
+                await turn_context.send_activity(
+                    MessageFactory.attachment(attachment)
+                )
+                await turn_context.send_activity(
+                    MessageFactory.text(
+                        "Enjoy!")
+                )
+            except Exception as exception:
+                await turn_context.send_activity(
+                    MessageFactory.text(
+                        "I can't find what you are searching for in conlfuence.")
+                )
