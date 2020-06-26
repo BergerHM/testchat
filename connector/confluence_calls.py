@@ -123,6 +123,8 @@ class ConfluenceSearch:
             return "text", parsed_html.get_text()
 
     def generic_search(self, search_term):
+        # TODO: Suche Stefan und filter unbrauchbare info raus
+        # TODO: Suche agil, fix fehler
         results = self.confluence_search(search_term)
         typ, content = self.get_confluence_site_content(results[0]['id'])
         return typ, content
