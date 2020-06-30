@@ -26,7 +26,7 @@ class LuisRecognizerEnigma(Recognizer):
         ##)
         luis_application = LuisApplication(
             "36901912-db40-4303-8dac-58b3bcc43390",
-            "d108bb0f1d774d519db79d4d6753bb98",
+            "23d11aa114794c4fa1fcab35a09b9e97",
             "https://westus.api.cognitive.microsoft.com",
         )
         self._recognizer = LuisRecognizer(luis_application)

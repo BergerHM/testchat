@@ -66,6 +66,11 @@ class LuisHelper:
                 "name", []
             )
 
+        elif intent == Intent.SEARCH_TEXT.value:
+            entity = recognizer_result.entities.get("$instance", {}).get(
+                "searchObject", []
+            )
+
         if entity and len(entity) > 0:
             entity = entity[0]["text"].lower()
 

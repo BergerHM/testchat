@@ -65,10 +65,8 @@ class Enigma_ConBot(ActivityHandler):
         )
 
         recognizer_result = await self._luis_recognizer.recognize(turn_context)
-        # Luis Score for the Intent
         scoring = recognizer_result.get_top_scoring_intent().score
 
-        # Score threshold
         score_threshold = 0.5
 
         # Luis Debug
@@ -103,7 +101,7 @@ class Enigma_ConBot(ActivityHandler):
                 )
             else:
 
-                response = "It seems you're searching for a specific role.\n\nHere are the current roles:  "
+                response = "It seems you're searching for a specific role.\n\nHere are all the current roles:  "
                 for x in information:
                     response += "\n\n - " + x
                 await turn_context.send_activity(
@@ -153,15 +151,28 @@ class Enigma_ConBot(ActivityHandler):
                     "Oh I am very sorry, I hope you will get well soon! Please don't hesitate to ask me something.")
             )
 
-
-
-        # Default Suche für allgm. Confluence-Suche (+wenn nur ein Wort eingegeben wird welches er nicht kennt)
-        # TODO: Default Suche muss mit Confluence funktionieren
+        elif intent == Intent.SEARCH_TEXT.value and scoring > score_threshold and search_info != "":
+            await turn_context.send_activity(
+                MessageFactory.text(
+                    "I'll look up \"" + search_info + "\" in confluence for you.")
+            )
+            try:
+                typ, response = ConfluenceSearch().generic_search(search_info)
+                result = self.cardbuilder.build_generic_card(typ, response)
+                attachment = Attachment(content_type='application/vnd.microsoft.card.adaptive', content=result)
+                await turn_context.send_activity(
+                    MessageFactory.attachment(attachment)
+                )
+            except Exception as exception:
+                await turn_context.send_activity(
+                    MessageFactory.text(
+                        "I can't find what you are searching for in confluence.")
+                )
         else:
 
             await turn_context.send_activity(
                 MessageFactory.text(
-                    "I'll look up " + user_text + " in confluence for you.")
+                    "I'll look up \"" + user_text + "\" in confluence for you.")
             )
             try:
                 typ, response = ConfluenceSearch().generic_search(user_text)
@@ -170,12 +181,8 @@ class Enigma_ConBot(ActivityHandler):
                 await turn_context.send_activity(
                     MessageFactory.attachment(attachment)
                 )
-                await turn_context.send_activity(
-                    MessageFactory.text(
-                        "Enjoy!")
-                )
             except Exception as exception:
                 await turn_context.send_activity(
                     MessageFactory.text(
-                        "I can't find what you are searching for in conlfuence.")
+                        "I can't find what you are searching for in confluence.")
                 )
