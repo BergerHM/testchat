@@ -60,6 +60,7 @@ class Enigma_ConBot(ActivityHandler):
 
         user_text = turn_context.activity.text.strip()
 
+        # Returns the Intent and Entity recognized by Luis
         intent, search_info = await LuisHelper.execute_luis_query(
             self._luis_recognizer, turn_context
         )
@@ -68,17 +69,20 @@ class Enigma_ConBot(ActivityHandler):
         # Luis Score for the Intent
         scoring = recognizer_result.get_top_scoring_intent().score
 
-        # Score threshold
+        # Score threshold a prediction needs to be reliable
         score_threshold = 0.5
 
         # Luis Debug
         ########################################
-        '''await turn_context.send_activity(
+        await turn_context.send_activity(
             MessageFactory.text(f"Intent: {intent}")
         )
         await turn_context.send_activity(
             MessageFactory.text(f"Entity: {search_info}")
-        )'''
+        )
+        await turn_context.send_activity(
+            MessageFactory.text(f"why: {recognizer_result}")
+        )
 
         # Luis Debug
         ########################################
@@ -111,20 +115,37 @@ class Enigma_ConBot(ActivityHandler):
                 )
 
         # Personensuche
-        # TODO: Methoden einfügen um Inhalt aus Confluence für PErsonensuche zu erhalten
         elif intent == Intent.SEARCH_PERSON.value and scoring > score_threshold:
-
             await turn_context.send_activity(
                 MessageFactory.text(
                     "I'll look up the account of " + search_info)
             )
+            information = ConfluenceSearch().get_person(search_info)
+            person_card = self.cardbuilder.build_person_card(information)
+            attachment = Attachment(content_type='application/vnd.microsoft.card.adaptive', content=person_card)
+            await turn_context.send_activity(
+                MessageFactory.attachment(attachment)
+            )
+
+
 
         # Show help message
         elif intent == Intent.HELP.value and scoring > score_threshold:
             await turn_context.send_activity(
-                MessageFactory.text("At some point there will be text here explaining what i can do")
-            )
+                MessageFactory.text("Hi, im trying to help you find info in confluence.\n\n\n\n"
+                                    "Textsearch:\n\n Just type what you are searching for: \"java\", \"ostern\", ..."
+                                    "\n\nYou can also ask me in a sentence: \"Can you search for hausbauer\"?"
+            
+                                    "\n\nPersonsearch:\n\n To find the account of someone you can use one of the "
+                                    "following exampels or sentences with a similar structure: "
+                                    "\"Can you look up Michael Huber\"?, \"Find the account of Bina Schulz\""
 
+                                    "\n\nRolesearch:\n\n To find a person with a specific Job you can use one of the "
+                                    "following examples or sentences with a similar structure: "
+                                    "\"Who is responsible for innovationen\"?, \"Show me everyone working as scrum "
+                                    "master.\"")
+
+            )
         elif intent == Intent.WHO.value and scoring > score_threshold:
             await turn_context.send_activity(
                 MessageFactory.text(
@@ -168,7 +189,6 @@ class Enigma_ConBot(ActivityHandler):
             )
 
         # Default Suche für allgm. Confluence-Suche (+wenn nur ein Wort eingegeben wird welches er nicht kennt)
-        # TODO: Default Suche muss mit Confluence funktionieren
         elif intent == Intent.SEARCH_TEXT.value and scoring > score_threshold and search_info != "":
             await turn_context.send_activity(
                 MessageFactory.text(
@@ -190,7 +210,7 @@ class Enigma_ConBot(ActivityHandler):
 
             await turn_context.send_activity(
                 MessageFactory.text(
-                    "I'll look up " + user_text + " in confluence for you.")
+                    "I'll look up \"" + user_text + "\" in confluence for you.")
             )
             try:
                 typ, response = ConfluenceSearch().generic_search(user_text)

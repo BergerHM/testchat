@@ -42,7 +42,7 @@ class CardBuilder():
         # TODO: Hier werden Informationen über einen Kontakt wieder gegeben
         jsondata = '{"$schema":"http://adaptivecards.io/schemas/adaptive-card.json","type":"AdaptiveCard","version":"1.0","body":[{"type":"Container","items":[{"type":"TextBlock","text":"Max Musterman","weight":"bolder","wrap":true},{"type":"FactSet","facts":[{"title":"E-Mail:","value":"lukas.altenstrasser@hm.edu"},{"title":"Profil:","value":"profilurl"}]}]}]}'
         data = json.loads(jsondata)
-        picture = ConfluenceSearch().get_profile_picture(info["profilePicture"]["path"])
+        #picture = ConfluenceSearch().get_profile_picture(info["profilePicture"]["path"])
         data["body"][0]["items"][1]["facts"][0]["value"] = info["email"]
         data["body"][0]["items"][1]["facts"][1]["value"] = "https://ccwi.atlassian.net/wiki/people/" + info["accountId"]
         data["body"][0]["items"][0]["text"] = info["publicName"]
