@@ -74,7 +74,7 @@ class Enigma_ConBot(ActivityHandler):
 
         # Luis Debug
         ########################################
-        await turn_context.send_activity(
+        '''await turn_context.send_activity(
             MessageFactory.text(f"Intent: {intent}")
         )
         await turn_context.send_activity(
@@ -82,7 +82,7 @@ class Enigma_ConBot(ActivityHandler):
         )
         await turn_context.send_activity(
             MessageFactory.text(f"why: {recognizer_result}")
-        )
+        )'''
 
         # Luis Debug
         ########################################
@@ -140,7 +140,7 @@ class Enigma_ConBot(ActivityHandler):
                 MessageFactory.text("Hi, im trying to help you find info in confluence.\n\n\n\n"
                                     "Textsearch:\n\n Just type what you are searching for: \"java\", \"ostern\", ..."
                                     "\n\nYou can also ask me in a sentence: \"Can you search for hausbauer\"?"
-            
+
                                     "\n\nPersonsearch:\n\n To find the account of someone you can use one of the "
                                     "following exampels or sentences with a similar structure: "
                                     "\"Can you look up Michael Huber\"?, \"Find the account of Bina Schulz\""
@@ -160,7 +160,8 @@ class Enigma_ConBot(ActivityHandler):
 
         elif intent == Intent.HOW.value and scoring > score_threshold:
             list1 = ("Same old, same old.", "I’m alive!", "Quite well, old chap, quite well indeed!",
-                     "Are we pretending i have moods?", "Never been better, let us get to work.", "I'm fine thanks, and you?")
+                     "Are we pretending i have moods?", "Never been better, let us get to work.",
+                     "I'm fine thanks, and you?")
             result = random.choice(list1)
             await turn_context.send_activity(
                 MessageFactory.text(result)
