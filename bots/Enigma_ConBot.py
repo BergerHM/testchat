@@ -121,11 +121,16 @@ class Enigma_ConBot(ActivityHandler):
                     "I'll look up the account of " + search_info)
             )
             information = ConfluenceSearch().get_person(search_info)
-            person_card = self.cardbuilder.build_person_card(information)
-            attachment = Attachment(content_type='application/vnd.microsoft.card.adaptive', content=person_card)
-            await turn_context.send_activity(
-                MessageFactory.attachment(attachment)
-            )
+            if not information is None:
+                person_card = self.cardbuilder.build_person_card(information)
+                attachment = Attachment(content_type='application/vnd.microsoft.card.adaptive', content=person_card)
+                await turn_context.send_activity(
+                    MessageFactory.attachment(attachment)
+                )
+            else:
+                await turn_context.send_activity(
+                    MessageFactory.text("Could not find any Person with the name " + search_info)
+                )
 
 
 
