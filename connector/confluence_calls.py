@@ -130,4 +130,18 @@ class ConfluenceSearch:
         return typ, content
 
     def get_person(self, name):
+        """
+            Return Information for Person
+        """
+        payload = {}
+        headers = {
+            'Authorization': 'Basic bHVrYXMuYWx0ZW5zdHJhc3NlckBobS5lZHU6YjBWbGpSc3pxRUFQWE1qQnlmMEdCMEQ4'
+        }
+        url = "https://ccwi.atlassian.net/wiki/rest/api/group/confluence-users/member"
+        response = requests.request("GET", url, headers=headers, data=payload)
+        json_response = response.json()
+        for x in json_response["results"]:
+            if x["publicName"] == name:
+                return x
         return None
+    
