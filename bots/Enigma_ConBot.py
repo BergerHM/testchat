@@ -129,7 +129,7 @@ class Enigma_ConBot(ActivityHandler):
                 )
             else:
                 await turn_context.send_activity(
-                    MessageFactory.text("Could not find any Person with the name " + search_info)
+                    MessageFactory.text("I am very sorry, I can’t find the Person with the name " + search_info + ". Please check the name for spelling mistakes.")
                 )
 
 
