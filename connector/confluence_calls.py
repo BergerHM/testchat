@@ -116,7 +116,7 @@ class ConfluenceSearch:
         elif "image" in html:
             # TODO: Decide what to do with pictures
             print("image gefunden")
-            return "picture"
+            return "picture", "picture data"
         else:
             parsed_html = BeautifulSoup(html)
             # TODO: Text schöner formatieren also absätze beachten
@@ -124,10 +124,12 @@ class ConfluenceSearch:
 
     def generic_search(self, search_term):
         # TODO: Suche Stefan und filter unbrauchbare info raus
-        # TODO: Suche agil, fix fehler
-        results = self.confluence_search(search_term)
-        typ, content = self.get_confluence_site_content(results[0]['id'])
-        return typ, content
+        try:
+            results = self.confluence_search(search_term)
+            typ, content = self.get_confluence_site_content(results[0]['id'])
+            return typ, content
+        except Exception as error:
+            print("Search term is None " + repr(error))
 
     def get_person(self, name):
         """
@@ -144,4 +146,3 @@ class ConfluenceSearch:
             if x["publicName"] == name:
                 return x
         return None
-    

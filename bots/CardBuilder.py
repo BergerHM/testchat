@@ -40,7 +40,7 @@ class CardBuilder():
         # TODO: Hier werden Informationen über einen Kontakt wieder gegeben
         jsondata = '{"$schema": "http://adaptivecards.io/schemas/adaptive-card.json","type": "AdaptiveCard","version": "1.0","body": [{"type": "Container","items": [{"type": "TextBlock","text": "Hier könnte Ihre Information stehen.","weight": "bolder","size": "medium"},{"type": "TextBlock","text": "Diese Karte ist noch in Arbeit","wrap": true}]}]}'
         data = json.loads(jsondata)
-        return None
+        return data
 
     def set_url(self, card, url):
         """
