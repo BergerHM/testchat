@@ -1,6 +1,7 @@
 # Methods for searching Confluence
 
 import requests
+import base64
 from docutils.parsers.rst.roles import role
 
 from connector.htmltableparser import HTMLTableParser
@@ -146,3 +147,18 @@ class ConfluenceSearch:
             if x["publicName"] == name:
                 return x
         return None
+
+    def get_profile_picture(self, path):
+        """
+            Return Profile picture for Person
+        """
+        payload = {}
+        headers = {
+            'Authorization': 'Basic bHVrYXMuYWx0ZW5zdHJhc3NlckBobS5lZHU6YjBWbGpSc3pxRUFQWE1qQnlmMEdCMEQ4'
+        }
+        url = "https://ccwi.atlassian.net" + path
+        response = requests.request("GET", url, headers=headers, data=payload)
+        print(response)
+        encodepic = base64.b64encode(response.content)
+        print(encodepic)
+        return encodepic

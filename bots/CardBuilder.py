@@ -1,5 +1,7 @@
 import json
 
+from connector import ConfluenceSearch
+
 
 class CardBuilder():
     def build_table_card(self, information):
@@ -36,10 +38,14 @@ class CardBuilder():
     def build_picture_card(self, data):
         return None
 
-    def build_person_card(self):
+    def build_person_card(self, info):
         # TODO: Hier werden Informationen über einen Kontakt wieder gegeben
-        jsondata = '{"$schema": "http://adaptivecards.io/schemas/adaptive-card.json","type": "AdaptiveCard","version": "1.0","body": [{"type": "Container","items": [{"type": "TextBlock","text": "Hier könnte Ihre Information stehen.","weight": "bolder","size": "medium"},{"type": "TextBlock","text": "Diese Karte ist noch in Arbeit","wrap": true}]}]}'
+        jsondata = '{"$schema":"http://adaptivecards.io/schemas/adaptive-card.json","type":"AdaptiveCard","version":"1.0","body":[{"type":"Container","items":[{"type":"TextBlock","text":"Max Musterman","weight":"bolder","wrap":true},{"type":"FactSet","facts":[{"title":"E-Mail:","value":"lukas.altenstrasser@hm.edu"},{"title":"Profil:","value":"profilurl"}]}]}]}'
         data = json.loads(jsondata)
+        picture = ConfluenceSearch().get_profile_picture(info["profilePicture"]["path"])
+        data["body"][0]["items"][1]["facts"][0]["value"] = info["email"]
+        data["body"][0]["items"][1]["facts"][1]["value"] = "https://ccwi.atlassian.net/wiki/people/" + info["accountId"]
+        data["body"][0]["items"][0]["text"] = info["publicName"]
         return data
 
     def set_url(self, card, url):
