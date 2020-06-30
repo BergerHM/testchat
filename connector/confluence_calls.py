@@ -144,7 +144,7 @@ class ConfluenceSearch:
         response = requests.request("GET", url, headers=headers, data=payload)
         json_response = response.json()
         for x in json_response["results"]:
-            if x["publicName"] == name:
+            if x["publicName"].lower() == name:
                 return x
         return None
 
