@@ -17,7 +17,8 @@ class Intent(Enum):
     USERANSWER_Y = "USER_ANSWER_Positive"
     USERANSWER_N = "USER_ANSWER_Negative"
     SEARCH_TEXT = "SearchText"
-
+    BYE = "BYE"
+    GREET = "Begruessung"
 
 def top_intent(intents: Dict[Intent, dict]) -> TopIntent:
     max_intent = Intent.NONE_INTENT
