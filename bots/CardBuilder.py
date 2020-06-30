@@ -5,6 +5,11 @@ from connector import ConfluenceSearch
 
 class CardBuilder():
     def build_table_card(self, information):
+        """
+        Build a adaptive card that contains a table
+        :param information: for the table as dict
+        :return: data that contains the card as json string
+        """
         with open('cards/AdaptiveCardTemplate.json') as json_file:
             data = json.load(json_file)
         for x in information:
@@ -17,9 +22,12 @@ class CardBuilder():
         return data
 
     def build_generic_card(self, typ, data):
-        # TODO: Try to build a generic card for confluence pages
-        #jsondata = '{"$schema": "http://adaptivecards.io/schemas/adaptive-card.json","type": "AdaptiveCard","version": "1.0","body": [{"type": "Container","items": [{"type": "TextBlock","text": "Hier könnte Ihre Information stehen.","weight": "bolder","size": "medium"},{"type": "TextBlock","text": "Diese Karte ist noch in Arbeit","wrap": true}]}]}'
-        #data = json.loads(jsondata)
+        """
+        Determine the content from the generic search and build a card for it
+        :param typ: content type
+        :param data: the content itself
+        :return: card as json string
+        """
         if typ == "table":
             return self.build_table_card(data[0])
         elif typ == "picture":
@@ -30,6 +38,11 @@ class CardBuilder():
             raise ValueError("Data Typ could not be regonized")
 
     def build_text_card(self, data):
+        """
+        Build AdaptiveCard that contains text
+        :param data: the text for the card
+        :return: card that contains the adaptive card as json string
+        """
         with open('cards/TextCardTemplate.json') as json_file:
             card = json.load(json_file)
             card['body'][1]['items'][0]['text'] = data
@@ -39,6 +52,11 @@ class CardBuilder():
         return None
 
     def build_person_card(self, info):
+        """
+        Build adaptive card for person information
+        :param info: person information
+        :return: data that contains adaptive card  as json string
+        """
         # TODO: Hier werden Informationen über einen Kontakt wieder gegeben
         jsondata = '{"$schema":"http://adaptivecards.io/schemas/adaptive-card.json","type":"AdaptiveCard","version":"1.0","body":[{"type":"Container","items":[{"type":"TextBlock","text":"Max Musterman","weight":"bolder","wrap":true},{"type":"FactSet","facts":[{"title":"E-Mail:","value":"lukas.altenstrasser@hm.edu"},{"title":"Profil:","value":"profilurl"}]}]}]}'
         data = json.loads(jsondata)
@@ -48,26 +66,12 @@ class CardBuilder():
         data["body"][0]["items"][0]["text"] = info["publicName"]
         return data
 
-    def set_url(self, card, url):
-        """
-            Method adds a URL to any Action.OpenUrl field
-
-            @param card: the card where the url needs to be set
-            @param url: the url to set in the card
-            @return: the given card with the url set
-        """
-        # TODO: find url tag and change it
-        return card
-
     def create_column_set(self, data, bold=False):
         """
         With this method you can create a columns set for AdaptiveCards
-
-        :param column1: value of first column
-        :param column2: value of second column
-        :param column3: value of third column
+        :param data: data for the columns
         :param bold: if True the line will be bold
-        :return: column set to add in a card
+        :return: columnset to add in a card
         """
         columns = []
         for x in data:
@@ -81,7 +85,6 @@ class CardBuilder():
     def create_column(self, text, bold=False):
         """
         Create column for AdaptiveCard
-
         :param text: value of  column
         :param bold: if True the line will be bold
         :return: column in json format
