@@ -17,24 +17,11 @@ class ConfluenceSearch:
     def __init__(self):
         self.parser = HTMLTableParser()
 
-    def get_sites(self):
-        url = "https://ccwi.atlassian.net/wiki/rest/api/content"
-        response = requests.request("GET", url, headers=self.headers, data=self.payload)
-        json_response = response.json()
-        chat_response = ""
-        for item in json_response["results"]:
-            chat_response += item["title"] + "\n"
-        print(chat_response)
-        return chat_response
-
-    def get_azubis_from_labs(self):
-        url = "https://ccwi.atlassian.net/wiki/rest/api/content/47972513?expand=body.storage"
-        response = requests.request("GET", url, headers=self.headers, data=self.payload)
-        print(response.text.encode('utf8'))
-
     def get_role(self, role):
         """
         Get people with matching role from the table
+        :param role: the role to search for
+        :return: data info with matching person information to the role
         """
         array = []
         data = []
@@ -56,7 +43,8 @@ class ConfluenceSearch:
 
     def get_roles(self):
         """
-            Method used to return the available roles for the search
+        Method used to return the available roles for the search
+        :return: array with available roles
         """
         array = []
         payload = {}
@@ -78,9 +66,9 @@ class ConfluenceSearch:
 
     def confluence_search(self, search_term):
         """
-        Search with search begriff in the confuence search
-
-        :return results: list with search results
+        Search with search search_term in the confuence search
+        :param search_term:
+        :return: results: list with search results
         """
         results = []
         url = "https://ccwi.atlassian.net/wiki/rest/api/content/search?cql=text~" + search_term
@@ -96,7 +84,9 @@ class ConfluenceSearch:
 
     def get_confluence_site_content(self, site_id):
         """
-            Returns the content of given Confluence Site
+        Returns the content of given Confluence Site
+        :param site_id: the id of the confluence site
+        :return: type of found content and content itself
         """
         payload = {}
         headers = {
@@ -124,6 +114,11 @@ class ConfluenceSearch:
             return "text", parsed_html.get_text()
 
     def generic_search(self, search_term):
+        """
+        Use the search function in Confluence and search for the search_term
+        :param search_term:
+        :return: typ of found content and content itself
+        """
         # TODO: Suche Stefan und filter unbrauchbare info raus
         try:
             results = self.confluence_search(search_term)
