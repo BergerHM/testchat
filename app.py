@@ -7,6 +7,7 @@ from datetime import datetime
 
 from aiohttp import web
 from aiohttp.web import Request, Response, json_response
+from botbuilder.ai.luis import LuisRecognizer
 from botbuilder.core import (
     BotFrameworkAdapterSettings,
     TurnContext,
@@ -17,6 +18,7 @@ from botbuilder.schema import Activity, ActivityTypes
 
 from bots import Enigma_ConBot
 from config import DefaultConfig
+from recognizer.luis_recognizer_enigma import LuisRecognizerEnigma
 
 CONFIG = DefaultConfig()
 
@@ -59,7 +61,8 @@ MEMORY = MemoryStorage()
 USER_STATE = UserState(MEMORY)
 CONVERSATION_STATE = ConversationState(MEMORY)
 # Create the Bot
-BOT = Enigma_ConBot(CONVERSATION_STATE, USER_STATE)
+RECOGNIZER = LuisRecognizerEnigma(CONFIG)
+BOT = Enigma_ConBot(CONVERSATION_STATE, USER_STATE, RECOGNIZER)
 
 
 # Listen for incoming requests on /api/messages
